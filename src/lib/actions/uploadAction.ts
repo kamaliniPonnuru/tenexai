@@ -1,7 +1,5 @@
 'use server';
 
-import { writeFile, mkdir, unlink } from 'fs/promises';
-import { existsSync } from 'fs';
 import { join } from 'path';
 import { LogAnalysisModel } from '@/lib/models/logAnalysis';
 import { LogParserService } from '@/lib/services/logParser';
@@ -58,13 +56,7 @@ export async function uploadFileAction(formData: FormData) {
       return { success: false, error: 'File too large. Maximum size is 10MB.' };
     }
 
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = join(process.cwd(), 'uploads');
-    console.log('📂 Uploads directory:', uploadsDir);
-    console.log('📂 Current working directory:', process.cwd());
-    console.log('📂 Directory exists check:', existsSync(uploadsDir));
-    
-    // Skip directory creation for now - process file from memory
+    // Skip file system operations - process file from memory
     console.log('⚠️ Skipping file system operations, processing from memory');
     
     // Generate unique filename (for database reference only)
