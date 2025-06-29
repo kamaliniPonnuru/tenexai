@@ -62,6 +62,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
+  const [loadingAnalysis, setLoadingAnalysis] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
   const [userId, setUserId] = useState<number | null>(null);
   const [userRole, setUserRole] = useState<string>('enduser');
   const [userName, setUserName] = useState<string>('');
@@ -136,10 +138,39 @@ export default function Dashboard() {
       if (result.success) {
         console.log('✅ Upload successful:', result.file);
         setUploadProgress(100);
-        setTimeout(() => {
+        
+        // Refresh the files list
+        await fetchFiles(userId);
+        
+        // Find the newly uploaded file and automatically select it
+        setTimeout(async () => {
+          try {
+            const response = await fetch(`/api/logs/files?userId=${userId}`);
+            if (response.ok) {
+              const data = await response.json();
+              const updatedFiles = data.files;
+              setFiles(updatedFiles);
+              
+              // Find the newly uploaded file (should be the most recent one)
+              const newFile = updatedFiles.find((f: UploadedFile) => 
+                f.original_name === file.name && f.status === 'completed'
+              );
+              
+              if (newFile) {
+                console.log('🎯 Auto-selecting newly uploaded file:', newFile);
+                await handleFileSelect(newFile);
+                setActiveTab('analysis'); // Switch to analysis tab
+                setUploadSuccess(true);
+                // Clear success message after 5 seconds
+                setTimeout(() => setUploadSuccess(false), 5000);
+              }
+            }
+          } catch (error) {
+            console.error('Error auto-selecting file:', error);
+          }
+          
           setUploading(false);
           setUploadProgress(0);
-          fetchFiles(userId);
         }, 1000);
       } else {
         console.error('❌ Upload failed:', result.error, result.details);
@@ -157,7 +188,7 @@ export default function Dashboard() {
     if (file.status !== 'completed') return;
     
     setSelectedFile(file);
-    setLoading(true);
+    setLoadingAnalysis(true);
 
     try {
       const response = await fetch(`/api/logs/analysis/${file.id}?userId=${userId}`);
@@ -172,14 +203,14 @@ export default function Dashboard() {
     } catch (error) {
       console.error('Error fetching analysis:', error);
     } finally {
-      setLoading(false);
+      setLoadingAnalysis(false);
     }
   };
 
   const regenerateAIAnalysis = async () => {
     if (!selectedFile || !userId) return;
 
-    setLoading(true);
+    setLoadingAnalysis(true);
     try {
       const response = await fetch(`/api/logs/analysis/${selectedFile.id}?userId=${userId}`, {
         method: 'POST',
@@ -197,7 +228,7 @@ export default function Dashboard() {
     } catch (error) {
       console.error('Error regenerating AI analysis:', error);
     } finally {
-      setLoading(false);
+      setLoadingAnalysis(false);
     }
   };
 
@@ -490,6 +521,18 @@ export default function Dashboard() {
                   <p className="text-sm text-white/60 mt-2">Uploading... {uploadProgress}%</p>
                 </div>
               )}
+
+              {/* Success Message */}
+              {uploadSuccess && (
+                <div className="mt-4 p-4 bg-green-500/20 border border-green-500/30 rounded-lg">
+                  <div className="flex items-center">
+                    <svg className="w-5 h-5 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <p className="text-green-400 font-medium">Upload successful! Analysis results are now available.</p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* File List */}
@@ -546,10 +589,10 @@ export default function Dashboard() {
         {/* Analysis Tab */}
         {activeTab === 'analysis' && (
           <div className="space-y-6">
-            {loading ? (
+            {loadingAnalysis ? (
               <div className="text-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                <p className="mt-4 text-gray-600">Loading analysis...</p>
+                <p className="mt-4 text-white/70">Loading analysis results...</p>
               </div>
             ) : analysis ? (
               <>
