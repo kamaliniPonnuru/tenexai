@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface User {
@@ -35,43 +35,19 @@ export default function AdminPage() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
-      const response = await fetch(`/api/admin/users?adminUserId=${user?.id}`);
+      const response = await fetch('/api/admin/users');
       if (response.ok) {
         const data = await response.json();
         setUsers(data.users);
-      } else {
-        setError('Failed to fetch users');
       }
-    } catch {
-      setError('Failed to fetch users');
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
     }
-  };
+  }, []);
 
-  useEffect(() => {
-    const userData = localStorage.getItem('user');
-    if (!userData) {
-      router.push('/login');
-      return;
-    }
-
-    const user = JSON.parse(userData);
-    setUser(user);
-    
-    // Check if user is admin
-    if (user.role !== 'admin') {
-      router.push('/dashboard');
-      return;
-    }
-
-    fetchUsers();
-    fetchDatabaseStatus();
-  }, [router, user?.id]);
-
-  const fetchDatabaseStatus = async () => {
+  const fetchDatabaseStatus = useCallback(async () => {
     try {
       const response = await fetch('/api/test-db');
       if (response.ok) {
@@ -81,7 +57,27 @@ export default function AdminPage() {
     } catch (error) {
       console.error('Failed to fetch database status:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const userStr = localStorage.getItem('user');
+    if (!userStr) {
+      router.push('/login');
+      return;
+    }
+
+    const user = JSON.parse(userStr);
+    setUser(user);
+
+    if (user.role !== 'admin') {
+      router.push('/dashboard');
+      return;
+    }
+
+    fetchUsers();
+    fetchDatabaseStatus();
+    setLoading(false);
+  }, [router, fetchUsers, fetchDatabaseStatus]);
 
   const updateUserRole = async (userId: number, newRole: string) => {
     setUpdatingRole(userId);
