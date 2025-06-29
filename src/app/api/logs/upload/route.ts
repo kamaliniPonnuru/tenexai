@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
         await LogAnalysisModel.saveLogEntries(logEntries);
 
         // Generate analysis
-        const analysis = LogParserService.generateAnalysis(entries, filename, logType);
+        const analysis = LogParserService.generateAnalysis(entries);
         
         // Save analysis results
         await LogAnalysisModel.saveAnalysis({

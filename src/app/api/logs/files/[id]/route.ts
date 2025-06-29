@@ -3,14 +3,14 @@ import { LogAnalysisModel } from '@/lib/models/logAnalysis';
 import { unlink } from 'fs/promises';
 import { join } from 'path';
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const { searchParams, pathname } = new URL(request.url);
     const userId = searchParams.get('userId');
-    const fileId = parseInt(params.id);
+    
+    // Extract file ID from pathname: /api/logs/files/[id]
+    const pathSegments = pathname.split('/');
+    const fileId = parseInt(pathSegments[pathSegments.length - 1]);
 
     if (!userId) {
       return NextResponse.json(
@@ -19,9 +19,9 @@ export async function DELETE(
       );
     }
 
-    if (!fileId) {
+    if (!fileId || isNaN(fileId)) {
       return NextResponse.json(
-        { error: 'File ID is required' },
+        { error: 'Valid File ID is required' },
         { status: 400 }
       );
     }

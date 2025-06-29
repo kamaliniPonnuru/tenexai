@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { LogAnalysisModel } from '@/lib/models/logAnalysis';
 import { AIAnalysisService } from '@/lib/services/aiAnalysis';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const { searchParams, pathname } = new URL(request.url);
     const userId = searchParams.get('userId');
-    const fileId = parseInt(params.id);
+    
+    // Extract file ID from pathname: /api/logs/analysis/[id]
+    const pathSegments = pathname.split('/');
+    const fileId = parseInt(pathSegments[pathSegments.length - 1]);
 
     if (!userId) {
       return NextResponse.json(
@@ -18,9 +18,9 @@ export async function GET(
       );
     }
 
-    if (!fileId) {
+    if (!fileId || isNaN(fileId)) {
       return NextResponse.json(
-        { error: 'File ID is required' },
+        { error: 'Valid File ID is required' },
         { status: 400 }
       );
     }
@@ -104,19 +104,27 @@ export async function GET(
   }
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const { searchParams, pathname } = new URL(request.url);
     const userId = searchParams.get('userId');
-    const fileId = parseInt(params.id);
+    
+    // Extract file ID from pathname: /api/logs/analysis/[id]
+    const pathSegments = pathname.split('/');
+    const fileId = parseInt(pathSegments[pathSegments.length - 1]);
+    
     const { action } = await request.json();
 
     if (!userId) {
       return NextResponse.json(
         { error: 'User ID is required' },
+        { status: 400 }
+      );
+    }
+
+    if (!fileId || isNaN(fileId)) {
+      return NextResponse.json(
+        { error: 'Valid File ID is required' },
         { status: 400 }
       );
     }
