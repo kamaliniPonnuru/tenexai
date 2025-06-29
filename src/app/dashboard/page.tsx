@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { uploadFileAction } from '@/lib/actions/uploadAction';
 
 interface LogEntry {
   id: number;
@@ -113,17 +114,13 @@ export default function Dashboard() {
     console.log('📋 Form data prepared');
 
     try {
-      console.log('📤 Sending upload request...');
-      const response = await fetch('/api/logs/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      console.log('📥 Response received:', response.status, response.statusText);
+      console.log('📤 Calling server action...');
+      const result = await uploadFileAction(formData);
       
-      if (response.ok) {
-        const result = await response.json();
-        console.log('✅ Upload successful:', result);
+      console.log('📥 Server action result:', result);
+      
+      if (result.success) {
+        console.log('✅ Upload successful:', result.file);
         setUploadProgress(100);
         setTimeout(() => {
           setUploading(false);
@@ -131,9 +128,8 @@ export default function Dashboard() {
           fetchFiles(userId);
         }, 1000);
       } else {
-        const errorData = await response.json();
-        console.error('❌ Upload failed:', errorData);
-        throw new Error(`Upload failed: ${errorData.error || response.statusText}`);
+        console.error('❌ Upload failed:', result.error);
+        throw new Error(result.error || 'Upload failed');
       }
     } catch (error) {
       console.error('❌ Upload error:', error);

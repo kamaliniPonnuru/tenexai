@@ -4,6 +4,14 @@ import { join } from 'path';
 import { LogAnalysisModel } from '@/lib/models/logAnalysis';
 import { LogParserService } from '@/lib/services/logParser';
 
+// Simple GET method to test endpoint accessibility
+export async function GET() {
+  return NextResponse.json({
+    status: 'upload endpoint accessible',
+    timestamp: new Date().toISOString()
+  });
+}
+
 export async function POST(request: NextRequest) {
   console.log('🚀 Upload API called');
   
@@ -187,7 +195,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('❌ Upload error:', error);
     return NextResponse.json(
-      { error: 'Failed to upload file' },
+      { error: 'Failed to upload file', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }
