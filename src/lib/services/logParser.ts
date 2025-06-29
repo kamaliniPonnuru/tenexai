@@ -110,10 +110,45 @@ export class LogParserService {
 
         const [, source_ip, timestampStr, method, url, , status_code, bytes_sent, , user_agent] = match;
 
-        // Validate timestamp
-        const timestamp = new Date(timestampStr);
-        if (isNaN(timestamp.getTime())) {
-          console.warn('Invalid timestamp:', timestampStr, 'in line:', line);
+        // Parse Apache-style timestamp: "15/Jan/2024:10:30:15 +0000"
+        let timestamp: Date;
+        try {
+          // Handle Apache timestamp format: DD/MMM/YYYY:HH:MM:SS +ZZZZ
+          const apacheRegex = /(\d{2})\/(\w{3})\/(\d{4}):(\d{2}):(\d{2}):(\d{2}) ([\+\-]\d{4})/;
+          const apacheMatch = timestampStr.match(apacheRegex);
+          
+          if (apacheMatch) {
+            const [, day, month, year, hour, minute, second, timezone] = apacheMatch;
+            const monthMap: { [key: string]: number } = {
+              'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
+              'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
+            };
+            
+            const monthNum = monthMap[month];
+            if (monthNum === undefined) {
+              console.warn('Invalid month in timestamp:', month, 'in line:', line);
+              continue;
+            }
+            
+            timestamp = new Date(
+              parseInt(year),
+              monthNum,
+              parseInt(day),
+              parseInt(hour),
+              parseInt(minute),
+              parseInt(second)
+            );
+          } else {
+            // Try standard Date parsing as fallback
+            timestamp = new Date(timestampStr);
+          }
+          
+          if (isNaN(timestamp.getTime())) {
+            console.warn('Invalid timestamp:', timestampStr, 'in line:', line);
+            continue;
+          }
+        } catch (error) {
+          console.warn('Failed to parse timestamp:', timestampStr, 'in line:', line, error);
           continue;
         }
 
