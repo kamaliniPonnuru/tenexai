@@ -588,6 +588,10 @@ export default function Dashboard() {
         {/* Analysis Tab */}
         {activeTab === 'analysis' && (
           <div className="space-y-6">
+            {(() => {
+              return null;
+            })()}
+            
             {loadingAnalysis ? (
               <div className="text-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
@@ -782,7 +786,7 @@ export default function Dashboard() {
               </>
             ) : (
               <div className="text-center py-12">
-                <p className="text-gray-500">Select a file to view its analysis.</p>
+                <p className="text-white/70">Select a file to view its analysis.</p>
               </div>
             )}
           </div>
