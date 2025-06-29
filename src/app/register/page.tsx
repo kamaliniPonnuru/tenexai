@@ -201,7 +201,7 @@ export default function RegisterPage() {
                     className={`w-full px-4 py-3 bg-white/5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition-all ${
                       errors.firstName ? 'border-white/50' : 'border-white/20'
                     }`}
-                    placeholder="John"
+                    placeholder="Kamalini P"
                   />
                   {errors.firstName && (
                     <p className="text-white/60 text-sm mt-1">{errors.firstName}</p>
@@ -221,7 +221,7 @@ export default function RegisterPage() {
                     className={`w-full px-4 py-3 bg-white/5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition-all ${
                       errors.lastName ? 'border-white/50' : 'border-white/20'
                     }`}
-                    placeholder="Doe"
+                    placeholder="P"
                   />
                   {errors.lastName && (
                     <p className="text-white/60 text-sm mt-1">{errors.lastName}</p>
@@ -242,7 +242,7 @@ export default function RegisterPage() {
                   className={`w-full px-4 py-3 bg-white/5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition-all ${
                     errors.email ? 'border-white/50' : 'border-white/20'
                   }`}
-                  placeholder="john.doe@example.com"
+                  placeholder="kamalini.p1619@gmail.com"
                 />
                 {errors.email && (
                   <p className="text-white/60 text-sm mt-1">{errors.email}</p>
