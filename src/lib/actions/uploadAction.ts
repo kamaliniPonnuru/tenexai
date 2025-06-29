@@ -111,31 +111,44 @@ export async function uploadFileAction(formData: FormData) {
 
         // Process log entries immediately
         console.log('📊 Processing log entries...');
-        const logEntries = entries.map(entry => ({
-          user_id: userId,
-          filename,
-          log_type: logType,
-          timestamp: entry.timestamp,
-          source_ip: entry.source_ip,
-          destination_ip: entry.destination_ip,
-          user_agent: entry.user_agent,
-          url: entry.url,
-          action: entry.action,
-          status_code: entry.status_code,
-          bytes_sent: entry.bytes_sent,
-          bytes_received: entry.bytes_received,
-          threat_category: entry.threat_category,
-          severity: entry.severity
-        }));
+        console.log('📊 Number of entries to save:', entries.length);
+        
+        if (entries.length > 0) {
+          const logEntries = entries.map(entry => ({
+            user_id: userId,
+            filename,
+            log_type: logType,
+            timestamp: entry.timestamp,
+            source_ip: entry.source_ip,
+            destination_ip: entry.destination_ip,
+            user_agent: entry.user_agent,
+            url: entry.url,
+            action: entry.action,
+            status_code: entry.status_code,
+            bytes_sent: entry.bytes_sent,
+            bytes_received: entry.bytes_received,
+            threat_category: entry.threat_category,
+            severity: entry.severity
+          }));
 
-        await LogAnalysisModel.saveLogEntries(logEntries);
-        console.log('✅ Log entries saved');
+          console.log('📊 First log entry sample:', logEntries[0]);
+          await LogAnalysisModel.saveLogEntries(logEntries);
+          console.log('✅ Log entries saved');
+        } else {
+          console.log('⚠️ No log entries to save');
+        }
 
         // Generate analysis
         console.log('📈 Generating analysis...');
         const analysis = LogParserService.generateAnalysis(entries);
+        console.log('📈 Analysis generated:', {
+          total_entries: analysis.total_entries,
+          time_range: analysis.time_range,
+          threat_summary_length: analysis.threat_summary?.length
+        });
         
         // Save analysis results
+        console.log('💾 Saving analysis to database...');
         await LogAnalysisModel.saveAnalysis({
           user_id: userId,
           filename,
@@ -151,6 +164,7 @@ export async function uploadFileAction(formData: FormData) {
         console.log('✅ Analysis saved');
 
         // Update file status to completed
+        console.log('🔄 Updating file status to completed...');
         await LogAnalysisModel.updateFileStatus(uploadedFile.id, 'completed');
         console.log('✅ File status updated to completed');
 
@@ -169,6 +183,11 @@ export async function uploadFileAction(formData: FormData) {
 
       } catch (dbError) {
         console.error('❌ Database operation failed:', dbError);
+        console.error('❌ Database error details:', {
+          message: dbError instanceof Error ? dbError.message : 'Unknown error',
+          stack: dbError instanceof Error ? dbError.stack : 'No stack trace',
+          name: dbError instanceof Error ? dbError.name : 'Unknown error type'
+        });
         return {
           success: false,
           error: 'Database operation failed',
