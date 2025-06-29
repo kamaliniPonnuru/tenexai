@@ -115,10 +115,14 @@ export class LogParserService {
         try {
           // Handle Apache timestamp format: DD/MMM/YYYY:HH:MM:SS +ZZZZ
           const apacheRegex = /(\d{2})\/(\w{3})\/(\d{4}):(\d{2}):(\d{2}):(\d{2}) ([\+\-]\d{4})/;
+          console.log('🔍 Testing timestamp:', timestampStr);
+          console.log('🔍 Regex pattern:', apacheRegex);
           const apacheMatch = timestampStr.match(apacheRegex);
+          console.log('🔍 Regex match result:', apacheMatch);
           
           if (apacheMatch) {
             const [, day, month, year, hour, minute, second] = apacheMatch;
+            console.log('🔍 Parsed components:', { day, month, year, hour, minute, second });
             const monthMap: { [key: string]: number } = {
               'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
               'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
@@ -138,8 +142,10 @@ export class LogParserService {
               parseInt(minute),
               parseInt(second)
             );
+            console.log('🔍 Created timestamp:', timestamp);
           } else {
             // Try standard Date parsing as fallback
+            console.log('🔍 Using fallback Date parsing for:', timestampStr);
             timestamp = new Date(timestampStr);
           }
           
