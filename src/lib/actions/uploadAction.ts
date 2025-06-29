@@ -1,6 +1,7 @@
 'use server';
 
-import { writeFile, mkdir } from 'fs/promises';
+import { writeFile, mkdir, unlink } from 'fs/promises';
+import { existsSync } from 'fs';
 import { join } from 'path';
 import { LogAnalysisModel } from '@/lib/models/logAnalysis';
 import { LogParserService } from '@/lib/services/logParser';
@@ -61,11 +62,11 @@ export async function uploadFileAction(formData: FormData) {
     const uploadsDir = join(process.cwd(), 'uploads');
     console.log('📂 Uploads directory:', uploadsDir);
     console.log('📂 Current working directory:', process.cwd());
-    console.log('📂 Directory exists check:', require('fs').existsSync(uploadsDir));
+    console.log('📂 Directory exists check:', existsSync(uploadsDir));
     
     try {
       // Check if directory already exists
-      if (!require('fs').existsSync(uploadsDir)) {
+      if (!existsSync(uploadsDir)) {
         await mkdir(uploadsDir, { recursive: true });
         console.log('✅ Uploads directory created');
       } else {
@@ -75,15 +76,15 @@ export async function uploadFileAction(formData: FormData) {
       // Test write permissions
       const testFile = join(uploadsDir, 'test-write.txt');
       await writeFile(testFile, 'test');
-      await require('fs').unlinkSync(testFile);
+      await unlink(testFile);
       console.log('✅ Write permissions verified');
       
     } catch (dirError) {
       console.error('❌ Error with uploads directory:', dirError);
       console.error('❌ Error details:', {
         message: dirError instanceof Error ? dirError.message : 'Unknown error',
-        code: (dirError as any)?.code,
-        errno: (dirError as any)?.errno
+        code: (dirError as NodeJS.ErrnoException)?.code,
+        errno: (dirError as NodeJS.ErrnoException)?.errno
       });
       return {
         success: false,
@@ -102,7 +103,6 @@ export async function uploadFileAction(formData: FormData) {
     // Save file to disk
     console.log('💾 Saving file to disk...');
     let buffer: Buffer;
-    let fileSaved = false;
     try {
       const bytes = await file.arrayBuffer();
       buffer = Buffer.from(bytes);
@@ -111,10 +111,8 @@ export async function uploadFileAction(formData: FormData) {
       try {
         await writeFile(filepath, buffer);
         console.log('✅ File saved to disk');
-        fileSaved = true;
       } catch (diskError) {
         console.warn('⚠️ Could not save file to disk, continuing with memory processing:', diskError);
-        fileSaved = false;
       }
     } catch (fileError) {
       console.error('❌ Error processing file:', fileError);
