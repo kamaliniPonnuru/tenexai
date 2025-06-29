@@ -1,6 +1,5 @@
 'use server';
 
-import { join } from 'path';
 import { LogAnalysisModel } from '@/lib/models/logAnalysis';
 import { LogParserService } from '@/lib/services/logParser';
 
