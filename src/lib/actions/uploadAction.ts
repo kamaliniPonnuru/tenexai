@@ -120,8 +120,16 @@ export async function uploadFileAction(formData: FormData) {
       }
       
       let logType = 'unknown';
-      if (format === 'zscaler') {
+      if (format === 'zscaler_web') {
         logType = 'ZScaler Web Proxy';
+      } else if (format === 'zscaler_firewall') {
+        logType = 'ZScaler Firewall';
+      } else if (format === 'zscaler_dns') {
+        logType = 'ZScaler DNS';
+      } else if (format === 'zscaler_ssl') {
+        logType = 'ZScaler SSL Inspection';
+      } else if (format === 'zscaler_threat') {
+        logType = 'ZScaler Threat';
       } else if (format === 'webserver') {
         logType = 'Web Server';
       }

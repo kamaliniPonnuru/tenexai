@@ -17,6 +17,18 @@ export interface LogEntry {
   threat_category: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
   created_at: Date;
+  // Additional fields for different log types
+  protocol?: string | null;
+  source_port?: number | null;
+  destination_port?: number | null;
+  rule_name?: string | null;
+  query_type?: string | null;
+  query_name?: string | null;
+  response_code?: string | null;
+  ssl_version?: string | null;
+  cipher_suite?: string | null;
+  certificate_subject?: string | null;
+  entry_log_type?: 'web' | 'firewall' | 'dns' | 'ssl' | 'threat';
 }
 
 export interface LogAnalysis {
@@ -65,7 +77,19 @@ export class LogAnalysisModel {
         bytes_received BIGINT,
         threat_category VARCHAR(100),
         severity VARCHAR(20) CHECK (severity IN ('low', 'medium', 'high', 'critical')),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        -- Additional fields for different log types
+        protocol VARCHAR(50),
+        source_port INTEGER,
+        destination_port INTEGER,
+        rule_name VARCHAR(255),
+        query_type VARCHAR(50),
+        query_name TEXT,
+        response_code VARCHAR(50),
+        ssl_version VARCHAR(50),
+        cipher_suite VARCHAR(255),
+        certificate_subject TEXT,
+        entry_log_type VARCHAR(20) CHECK (entry_log_type IN ('web', 'firewall', 'dns', 'ssl', 'threat'))
       );
     `;
 
@@ -139,10 +163,12 @@ export class LogAnalysisModel {
       INSERT INTO log_entries (
         user_id, filename, log_type, timestamp, source_ip, destination_ip,
         user_agent, url, action, status_code, bytes_sent, bytes_received,
-        threat_category, severity
+        threat_category, severity, protocol, source_port, destination_port,
+        rule_name, query_type, query_name, response_code, ssl_version,
+        cipher_suite, certificate_subject, entry_log_type
       ) VALUES ${entries.map((_, index) => {
-        const offset = index * 14;
-        return `($${offset + 1}, $${offset + 2}, $${offset + 3}, $${offset + 4}, $${offset + 5}, $${offset + 6}, $${offset + 7}, $${offset + 8}, $${offset + 9}, $${offset + 10}, $${offset + 11}, $${offset + 12}, $${offset + 13}, $${offset + 14})`;
+        const offset = index * 25;
+        return `($${offset + 1}, $${offset + 2}, $${offset + 3}, $${offset + 4}, $${offset + 5}, $${offset + 6}, $${offset + 7}, $${offset + 8}, $${offset + 9}, $${offset + 10}, $${offset + 11}, $${offset + 12}, $${offset + 13}, $${offset + 14}, $${offset + 15}, $${offset + 16}, $${offset + 17}, $${offset + 18}, $${offset + 19}, $${offset + 20}, $${offset + 21}, $${offset + 22}, $${offset + 23}, $${offset + 24}, $${offset + 25})`;
       }).join(', ')}
     `;
 
@@ -160,7 +186,18 @@ export class LogAnalysisModel {
       entry.bytes_sent,
       entry.bytes_received,
       entry.threat_category,
-      entry.severity
+      entry.severity,
+      entry.protocol || null,
+      entry.source_port || null,
+      entry.destination_port || null,
+      entry.rule_name || null,
+      entry.query_type || null,
+      entry.query_name || null,
+      entry.response_code || null,
+      entry.ssl_version || null,
+      entry.cipher_suite || null,
+      entry.certificate_subject || null,
+      entry.log_type || 'web'
     ]);
 
     await pool.query(query, values);
