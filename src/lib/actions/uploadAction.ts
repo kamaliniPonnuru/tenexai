@@ -60,15 +60,34 @@ export async function uploadFileAction(formData: FormData) {
     // Create uploads directory if it doesn't exist
     const uploadsDir = join(process.cwd(), 'uploads');
     console.log('📂 Uploads directory:', uploadsDir);
+    console.log('📂 Current working directory:', process.cwd());
+    console.log('📂 Directory exists check:', require('fs').existsSync(uploadsDir));
     
     try {
-      await mkdir(uploadsDir, { recursive: true });
-      console.log('✅ Uploads directory created/verified');
+      // Check if directory already exists
+      if (!require('fs').existsSync(uploadsDir)) {
+        await mkdir(uploadsDir, { recursive: true });
+        console.log('✅ Uploads directory created');
+      } else {
+        console.log('✅ Uploads directory already exists');
+      }
+      
+      // Test write permissions
+      const testFile = join(uploadsDir, 'test-write.txt');
+      await writeFile(testFile, 'test');
+      await require('fs').unlinkSync(testFile);
+      console.log('✅ Write permissions verified');
+      
     } catch (dirError) {
-      console.error('❌ Error creating uploads directory:', dirError);
+      console.error('❌ Error with uploads directory:', dirError);
+      console.error('❌ Error details:', {
+        message: dirError instanceof Error ? dirError.message : 'Unknown error',
+        code: (dirError as any)?.code,
+        errno: (dirError as any)?.errno
+      });
       return {
         success: false,
-        error: 'Failed to create uploads directory',
+        error: 'Failed to create or access uploads directory',
         details: dirError instanceof Error ? dirError.message : 'Unknown directory error'
       };
     }
@@ -83,16 +102,25 @@ export async function uploadFileAction(formData: FormData) {
     // Save file to disk
     console.log('💾 Saving file to disk...');
     let buffer: Buffer;
+    let fileSaved = false;
     try {
       const bytes = await file.arrayBuffer();
       buffer = Buffer.from(bytes);
-      await writeFile(filepath, buffer);
-      console.log('✅ File saved to disk');
+      
+      // Try to save to disk, but don't fail if it doesn't work
+      try {
+        await writeFile(filepath, buffer);
+        console.log('✅ File saved to disk');
+        fileSaved = true;
+      } catch (diskError) {
+        console.warn('⚠️ Could not save file to disk, continuing with memory processing:', diskError);
+        fileSaved = false;
+      }
     } catch (fileError) {
-      console.error('❌ Error saving file to disk:', fileError);
+      console.error('❌ Error processing file:', fileError);
       return {
         success: false,
-        error: 'Failed to save file to disk',
+        error: 'Failed to process file',
         details: fileError instanceof Error ? fileError.message : 'Unknown file error'
       };
     }
