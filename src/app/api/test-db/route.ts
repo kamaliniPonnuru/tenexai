@@ -1,47 +1,44 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    // Test the database connection
+    // Test database connection
     const client = await pool.connect();
     
-    // Run a simple query to test the connection
-    const result = await client.query('SELECT NOW() as current_time, version() as db_version');
+    // Get table information
+    const tablesQuery = `
+      SELECT 
+        table_name,
+        (SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public') as table_count
+      FROM information_schema.tables 
+      WHERE table_schema = 'public'
+    `;
     
-    // Release the client back to the pool
+    const tablesResult = await client.query(tablesQuery);
+    
+    // Get record counts for each table
+    const tableCounts = [];
+    for (const table of tablesResult.rows) {
+      const countResult = await client.query(`SELECT COUNT(*) as count FROM ${table.table_name}`);
+      tableCounts.push({
+        name: table.table_name,
+        count: parseInt(countResult.rows[0].count)
+      });
+    }
+    
     client.release();
     
     return NextResponse.json({
-      status: 'success',
-      message: 'Database connection successful',
-      data: {
-        currentTime: result.rows[0].current_time,
-        dbVersion: result.rows[0].db_version,
-        poolStatus: {
-          totalCount: pool.totalCount,
-          idleCount: pool.idleCount,
-          waitingCount: pool.waitingCount
-        }
-      }
-    }, { status: 200 });
-
-  } catch (error) {
-    console.error('Database connection test failed:', error);
+      status: 'connected',
+      tables: tableCounts
+    });
     
+  } catch (error) {
+    console.error('Database connection error:', error);
     return NextResponse.json({
       status: 'error',
-      message: 'Database connection failed',
-      error: error instanceof Error ? error.message : 'Unknown error',
-      details: {
-        checkEnvironmentVariables: {
-          DB_USER: process.env.DB_USER ? 'Set' : 'Not set',
-          DB_HOST: process.env.DB_HOST ? 'Set' : 'Not set',
-          DB_NAME: process.env.DB_NAME ? 'Set' : 'Not set',
-          DB_PASSWORD: process.env.DB_PASSWORD ? 'Set (hidden)' : 'Not set',
-          DB_PORT: process.env.DB_PORT ? 'Set' : 'Not set'
-        }
-      }
+      error: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 });
   }
 } 

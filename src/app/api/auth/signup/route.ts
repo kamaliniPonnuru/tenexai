@@ -85,7 +85,13 @@ export async function POST(request: NextRequest) {
     });
 
     // Remove password hash from response
-    const { password_hash, ...userWithoutPassword } = newUser;
+    const userWithoutPassword = {
+      id: newUser.id,
+      first_name: newUser.first_name,
+      last_name: newUser.last_name,
+      email: newUser.email,
+      role: newUser.role
+    };
 
     return NextResponse.json(
       { 

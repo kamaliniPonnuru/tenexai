@@ -50,7 +50,7 @@ export class UserModel {
       // Add role column if it doesn't exist (for existing databases)
       try {
         await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS role VARCHAR(20) DEFAULT \'enduser\' CHECK (role IN (\'admin\', \'tester\', \'enduser\'))');
-      } catch (error) {
+      } catch {
         // Column might already exist, ignore error
       }
       
@@ -148,8 +148,12 @@ export class UserModel {
       WHERE id = $2
     `;
     
-    await pool.query(query, [newPasswordHash, userId]);
-    return true;
+    try {
+      await pool.query(query, [newPasswordHash, userId]);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   // Update user role (admin only)

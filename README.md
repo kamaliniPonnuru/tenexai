@@ -1,4 +1,4 @@
-# 🚀 TenexAI - AI-Powered Cybersecurity Platform
+# TenexAI - AI-Powered Cybersecurity Platform
 
 **TenexAI** is a comprehensive SOC (Security Operations Center) analysis platform that leverages artificial intelligence to detect threats, analyze log files, and provide actionable insights for cybersecurity professionals. Built with a modern black and white aesthetic and role-based access control.
 

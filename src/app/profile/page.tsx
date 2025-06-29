@@ -45,7 +45,7 @@ export default function ProfilePage() {
       } else {
         setError('Failed to fetch user profile');
       }
-    } catch (error) {
+    } catch {
       setError('Failed to fetch user profile');
     } finally {
       setLoading(false);
@@ -55,21 +55,16 @@ export default function ProfilePage() {
   const handlePasswordUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (newPassword !== confirmPassword) {
-      setError('New passwords do not match');
+    if (!user) {
+      setError('User not found');
       return;
     }
-
-    if (newPassword.length < 6) {
-      setError('New password must be at least 6 characters long');
+    
+    if (!validatePasswordForm()) {
       return;
     }
-
-    if (!user) return;
 
     setUpdating(true);
-    setError('');
-    setMessage('');
 
     try {
       const response = await fetch('/api/users/profile', {
@@ -79,25 +74,42 @@ export default function ProfilePage() {
         },
         body: JSON.stringify({
           userId: user.id,
-          currentPassword,
-          newPassword
+          currentPassword: currentPassword,
+          newPassword: newPassword
         }),
       });
 
-      if (response.ok) {
-        setMessage('Password updated successfully');
-        setCurrentPassword('');
-        setNewPassword('');
-        setConfirmPassword('');
-      } else {
-        const data = await response.json();
+      const data = await response.json();
+
+      if (!response.ok) {
         setError(data.error || 'Failed to update password');
+        return;
       }
-    } catch (error) {
-      setError('Failed to update password');
+
+      setMessage('Password updated successfully');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      
+    } catch {
+      setError('Failed to update password. Please try again.');
     } finally {
       setUpdating(false);
     }
+  };
+
+  const validatePasswordForm = () => {
+    if (newPassword !== confirmPassword) {
+      setError('New passwords do not match');
+      return false;
+    }
+
+    if (newPassword.length < 6) {
+      setError('New password must be at least 6 characters long');
+      return false;
+    }
+
+    return true;
   };
 
   const getRoleBadgeColor = (role: string) => {

@@ -1,5 +1,3 @@
-import { LogEntry } from '../models/logAnalysis';
-
 export interface ParsedLogEntry {
   timestamp: Date;
   source_ip: string;
@@ -81,7 +79,7 @@ export class LogParserService {
 
         if (!match) continue;
 
-        const [, source_ip, timestampStr, method, url, protocol, status_code, bytes_sent, referer, user_agent] = match;
+        const [, source_ip, timestampStr, method, url, , status_code, bytes_sent, , user_agent] = match;
 
         const timestamp = new Date(timestampStr);
         const statusCode = parseInt(status_code);
@@ -226,7 +224,7 @@ export class LogParserService {
   }
 
   // Generate analysis summary from parsed entries
-  static generateAnalysis(entries: ParsedLogEntry[], filename: string, logType: string) {
+  static generateAnalysis(entries: ParsedLogEntry[]) {
     if (entries.length === 0) {
       return {
         total_entries: 0,

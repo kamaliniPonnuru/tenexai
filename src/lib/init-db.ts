@@ -1,10 +1,9 @@
-import pool from './db';
 import { UserModel } from './models/user';
 import { LogAnalysisModel } from './models/logAnalysis';
 
 export async function initializeDatabase() {
   try {
-    // Initialize users table with role support
+    // Initialize user table with roles
     await UserModel.initializeTable();
     
     // Initialize log analysis tables

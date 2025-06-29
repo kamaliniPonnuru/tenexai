@@ -20,15 +20,36 @@ interface DatabaseStatus {
   }[];
 }
 
+interface UserData {
+  id: number;
+  role: string;
+}
+
 export default function AdminPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<UserData | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [dbStatus, setDbStatus] = useState<DatabaseStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [updatingRole, setUpdatingRole] = useState<number | null>(null);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch(`/api/admin/users?adminUserId=${user?.id}`);
+      if (response.ok) {
+        const data = await response.json();
+        setUsers(data.users);
+      } else {
+        setError('Failed to fetch users');
+      }
+    } catch {
+      setError('Failed to fetch users');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const userData = localStorage.getItem('user');
@@ -48,23 +69,7 @@ export default function AdminPage() {
 
     fetchUsers();
     fetchDatabaseStatus();
-  }, [router]);
-
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch(`/api/admin/users?adminUserId=${user?.id}`);
-      if (response.ok) {
-        const data = await response.json();
-        setUsers(data.users);
-      } else {
-        setError('Failed to fetch users');
-      }
-    } catch (error) {
-      setError('Failed to fetch users');
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [router, user?.id]);
 
   const fetchDatabaseStatus = async () => {
     try {
@@ -90,7 +95,7 @@ export default function AdminPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          adminUserId: user.id,
+          adminUserId: user?.id,
           targetUserId: userId,
           newRole
         }),
@@ -103,7 +108,7 @@ export default function AdminPage() {
         const data = await response.json();
         setError(data.error || 'Failed to update user role');
       }
-    } catch (error) {
+    } catch {
       setError('Failed to update user role');
     } finally {
       setUpdatingRole(null);

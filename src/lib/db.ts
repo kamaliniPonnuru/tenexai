@@ -1,7 +1,7 @@
-import { Pool } from 'pg';
+import { Pool, PoolConfig } from 'pg';
 
 // Parse DATABASE_PUBLIC_URL if available, otherwise use individual env vars
-let poolConfig: any = {};
+let poolConfig: PoolConfig = {};
 
 if (process.env.DATABASE_PUBLIC_URL) {
   // Use the public URL from Railway
@@ -38,11 +38,11 @@ poolConfig.connectionTimeoutMillis = 2000; // Return an error after 2 seconds if
 const pool = new Pool(poolConfig);
 
 // Test the connection on startup
-pool.on('connect', (client) => {
+pool.on('connect', () => {
   console.log('✅ New client connected to database');
 });
 
-pool.on('error', (err, client) => {
+pool.on('error', (err) => {
   console.error('❌ Unexpected error on idle client', err);
 });
 
