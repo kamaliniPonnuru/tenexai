@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import pool, { getConnection } from '@/lib/db';
+import { getConnection } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -36,9 +36,9 @@ export async function GET() {
       status: 'error',
       error: error instanceof Error ? error.message : 'Unknown error',
       details: {
-        code: (error as any)?.code,
-        errno: (error as any)?.errno,
-        syscall: (error as any)?.syscall
+        code: (error as NodeJS.ErrnoException)?.code,
+        errno: (error as NodeJS.ErrnoException)?.errno,
+        syscall: (error as NodeJS.ErrnoException)?.syscall
       }
     }, { status: 500 });
   }
