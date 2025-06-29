@@ -30,10 +30,12 @@ if (process.env.DATABASE_PUBLIC_URL) {
   };
 }
 
-// Connection pool settings
-poolConfig.max = 20; // Maximum number of clients in the pool
-poolConfig.idleTimeoutMillis = 30000; // Close idle clients after 30 seconds
-poolConfig.connectionTimeoutMillis = 2000; // Return an error after 2 seconds if connection could not be established
+// Connection pool settings optimized for Railway
+poolConfig.max = 10; // Reduced max connections for Railway
+poolConfig.idleTimeoutMillis = 60000; // Close idle clients after 60 seconds
+poolConfig.connectionTimeoutMillis = 10000; // Increased to 10 seconds for Railway
+poolConfig.query_timeout = 30000; // Query timeout of 30 seconds
+poolConfig.statement_timeout = 30000; // Statement timeout of 30 seconds
 
 const pool = new Pool(poolConfig);
 
@@ -45,5 +47,24 @@ pool.on('connect', () => {
 pool.on('error', (err) => {
   console.error('❌ Unexpected error on idle client', err);
 });
+
+// Add connection retry logic
+export async function getConnection() {
+  let retries = 3;
+  while (retries > 0) {
+    try {
+      const client = await pool.connect();
+      return client;
+    } catch (error) {
+      retries--;
+      console.error(`❌ Database connection failed, retries left: ${retries}`, error);
+      if (retries === 0) {
+        throw error;
+      }
+      // Wait 2 seconds before retrying
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+  }
+}
 
 export default pool; 
