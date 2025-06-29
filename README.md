@@ -2,6 +2,10 @@ TenexAI - AI-Powered Cybersecurity Log Analysis Platform
 
 TenexAI is a full-stack web application built for SOC analysts to upload, analyze, and interpret log files using AI and anomaly detection. The platform offers a secure, user-friendly interface to process logs, visualize threats, and extract actionable intelligence.
 
+For deployed version access: https://tenexai-2uzr6ztu0-kamalini-ponnurus-projects.vercel.app/
+( I'm using Postgresql - railway - if you are seeing any error it might be due to inactive state let me know if you face any issue - I will activate it from my end )
+To run local - see instructions below
+
 🌟 Features
 
 🔐 Authentication & Security
