@@ -6,8 +6,8 @@ export interface LogEntry {
   filename: string;
   log_type: string;
   timestamp: Date;
-  source_ip: string;
-  destination_ip: string;
+  source_ip: string | null;
+  destination_ip: string | null;
   user_agent: string;
   url: string;
   action: string;
@@ -55,8 +55,8 @@ export class LogAnalysisModel {
         filename VARCHAR(255) NOT NULL,
         log_type VARCHAR(50) NOT NULL,
         timestamp TIMESTAMP NOT NULL,
-        source_ip INET,
-        destination_ip INET,
+        source_ip VARCHAR(45),
+        destination_ip VARCHAR(45),
         user_agent TEXT,
         url TEXT,
         action VARCHAR(100),

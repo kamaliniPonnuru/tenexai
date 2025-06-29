@@ -3,6 +3,17 @@
 import { LogAnalysisModel } from '@/lib/models/logAnalysis';
 import { LogParserService } from '@/lib/services/logParser';
 
+// IP validation function
+function isValidIP(ip: string): boolean {
+  if (!ip || ip === 'N/A' || ip === 'unknown' || ip.length > 45) return false;
+  
+  // Check if it's a valid IPv4 or IPv6 address
+  const ipv4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+  const ipv6Regex = /^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
+  
+  return ipv4Regex.test(ip) || ipv6Regex.test(ip);
+}
+
 export async function uploadFileAction(formData: FormData) {
   try {
     console.log('🚀 Server Action Upload called');
@@ -114,22 +125,28 @@ export async function uploadFileAction(formData: FormData) {
         console.log('📊 Number of entries to save:', entries.length);
         
         if (entries.length > 0) {
-          const logEntries = entries.map(entry => ({
-            user_id: userId,
-            filename,
-            log_type: logType,
-            timestamp: entry.timestamp,
-            source_ip: entry.source_ip,
-            destination_ip: entry.destination_ip,
-            user_agent: entry.user_agent,
-            url: entry.url,
-            action: entry.action,
-            status_code: entry.status_code,
-            bytes_sent: entry.bytes_sent,
-            bytes_received: entry.bytes_received,
-            threat_category: entry.threat_category,
-            severity: entry.severity
-          }));
+          const logEntries = entries.map(entry => {
+            // Validate and clean IP addresses
+            const cleanSourceIP = isValidIP(entry.source_ip) ? entry.source_ip : null;
+            const cleanDestIP = isValidIP(entry.destination_ip) ? entry.destination_ip : null;
+            
+            return {
+              user_id: userId,
+              filename,
+              log_type: logType,
+              timestamp: entry.timestamp,
+              source_ip: cleanSourceIP,
+              destination_ip: cleanDestIP,
+              user_agent: entry.user_agent,
+              url: entry.url,
+              action: entry.action,
+              status_code: entry.status_code,
+              bytes_sent: entry.bytes_sent,
+              bytes_received: entry.bytes_received,
+              threat_category: entry.threat_category,
+              severity: entry.severity
+            };
+          });
 
           console.log('📊 First log entry sample:', logEntries[0]);
           await LogAnalysisModel.saveLogEntries(logEntries);
