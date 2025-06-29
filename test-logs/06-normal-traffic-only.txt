@@ -1,0 +1,10 @@
+2024-01-15T10:45:15Z,192.168.1.400,10.0.0.300,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://www.google.com/search?q=news,GET,200,1024,2048
+2024-01-15T10:45:20Z,192.168.1.401,10.0.0.301,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36,https://www.github.com/explore,GET,200,512,1024
+2024-01-15T10:45:25Z,192.168.1.402,10.0.0.302,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://www.linkedin.com/feed,GET,200,2048,4096
+2024-01-15T10:45:30Z,192.168.1.403,10.0.0.303,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36,https://www.youtube.com/watch?v=video123,GET,200,1536,3072
+2024-01-15T10:45:35Z,192.168.1.404,10.0.0.304,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://www.stackoverflow.com/questions,GET,200,1024,2048
+2024-01-15T10:45:40Z,192.168.1.405,10.0.0.305,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36,https://www.reddit.com/r/programming,GET,200,768,1536
+2024-01-15T10:45:45Z,192.168.1.406,10.0.0.306,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://www.twitter.com/home,GET,200,512,1024
+2024-01-15T10:45:50Z,192.168.1.407,10.0.0.307,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36,https://www.facebook.com,GET,200,1024,2048
+2024-01-15T10:45:55Z,192.168.1.408,10.0.0.308,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://www.amazon.com,GET,200,1536,3072
+2024-01-15T10:46:00Z,192.168.1.409,10.0.0.309,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36,https://www.netflix.com,GET,200,1024,2048 

@@ -1,0 +1,10 @@
+2024-01-15T10:30:15Z,LOGIN_FAILED,192.168.1.100,user@example.com,Multiple failed login attempts for user account,high,logged,Authentication
+2024-01-15T10:30:20Z,PERMISSION_DENIED,192.168.1.101,admin@example.com,Unauthorized access attempt to admin panel,high,logged,Authorization
+2024-01-15T10:30:25Z,SQL_ERROR,192.168.1.102,user@example.com,SQL syntax error in user input,medium,logged,Input Validation
+2024-01-15T10:30:30Z,FILE_UPLOAD,192.168.1.103,user@example.com,Suspicious file upload attempt (.exe file),high,blocked,File Upload
+2024-01-15T10:30:35Z,SESSION_TIMEOUT,192.168.1.104,user@example.com,Session expired due to inactivity,low,logged,Session Management
+2024-01-15T10:30:40Z,API_RATE_LIMIT,192.168.1.105,api@example.com,API rate limit exceeded,medium,blocked,Rate Limiting
+2024-01-15T10:30:45Z,CSRF_ATTEMPT,192.168.1.106,user@example.com,CSRF token validation failed,high,blocked,CSRF Protection
+2024-01-15T10:30:50Z,DATA_EXPORT,192.168.1.107,admin@example.com,Large data export request,medium,logged,Data Access
+2024-01-15T10:30:55Z,PASSWORD_CHANGE,192.168.1.108,user@example.com,Password change request,low,logged,Password Management
+2024-01-15T10:31:00Z,SYSTEM_ERROR,192.168.1.109,system@example.com,Application error in payment processing,high,logged,System Error 

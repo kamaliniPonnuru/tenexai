@@ -1,0 +1,10 @@
+2024-01-15T10:30:15Z,192.168.1.100,10.0.0.50,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://www.google.com/search?q=cybersecurity,GET,200,1024,2048
+2024-01-15T10:30:20Z,192.168.1.101,10.0.0.51,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36,https://www.github.com/api/repos,GET,200,512,1024
+2024-01-15T10:30:25Z,192.168.1.102,10.0.0.52,curl/7.68.0,https://example.com/admin/panel,GET,403,512,256
+2024-01-15T10:30:30Z,192.168.1.103,10.0.0.53,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://example.com/search?q=<script>alert('xss')</script>,GET,400,128,64
+2024-01-15T10:30:35Z,192.168.1.104,10.0.0.54,PostmanRuntime/7.28.0,https://example.com/api/data,POST,500,1024,512
+2024-01-15T10:30:40Z,192.168.1.105,10.0.0.55,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://example.com/download/file.exe,GET,200,2048,1024
+2024-01-15T10:30:45Z,192.168.1.106,10.0.0.56,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://example.com/wp-admin,GET,404,256,128
+2024-01-15T10:30:50Z,192.168.1.107,10.0.0.57,sqlmap/1.5.12,https://example.com/api/users' OR '1'='1,POST,400,128,64
+2024-01-15T10:30:55Z,192.168.1.108,10.0.0.58,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://example.com/phpmyadmin,GET,403,512,256
+2024-01-15T10:31:00Z,192.168.1.109,10.0.0.59,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36,https://example.com/api/health,GET,200,64,32 

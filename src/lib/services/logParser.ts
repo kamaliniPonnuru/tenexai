@@ -20,6 +20,11 @@ export class LogParserService {
 
     for (const line of lines) {
       try {
+        // Skip lines that look like headers or comments
+        if (line.startsWith('#') || line.includes('timestamp,source_ip') || line.includes('source_ip,destination_ip')) {
+          continue;
+        }
+
         // ZScaler log format: timestamp, source_ip, destination_ip, user_agent, url, action, status_code, bytes_sent, bytes_received
         const parts = line.split(',').map(part => part.trim());
         
@@ -37,7 +42,13 @@ export class LogParserService {
           bytes_received
         ] = parts;
 
+        // Validate timestamp
         const timestamp = new Date(timestampStr);
+        if (isNaN(timestamp.getTime())) {
+          console.warn('Invalid timestamp:', timestampStr, 'in line:', line);
+          continue;
+        }
+
         const statusCode = parseInt(status_code) || 0;
         const bytesSent = parseInt(bytes_sent) || 0;
         const bytesReceived = parseInt(bytes_received) || 0;
@@ -73,6 +84,11 @@ export class LogParserService {
 
     for (const line of lines) {
       try {
+        // Skip lines that look like headers or comments
+        if (line.startsWith('#') || line.includes('timestamp,source_ip') || line.includes('source_ip,destination_ip')) {
+          continue;
+        }
+
         // Common web server log format: IP - - [timestamp] "method url protocol" status_code bytes_sent "referer" "user_agent"
         const regex = /^(\S+) - - \[([^\]]+)\] "(\S+) (\S+) (\S+)" (\d+) (\d+) "([^"]*)" "([^"]*)"$/;
         const match = line.match(regex);
@@ -81,7 +97,13 @@ export class LogParserService {
 
         const [, source_ip, timestampStr, method, url, , status_code, bytes_sent, , user_agent] = match;
 
+        // Validate timestamp
         const timestamp = new Date(timestampStr);
+        if (isNaN(timestamp.getTime())) {
+          console.warn('Invalid timestamp:', timestampStr, 'in line:', line);
+          continue;
+        }
+
         const statusCode = parseInt(status_code);
         const bytesSent = parseInt(bytes_sent);
 
@@ -209,18 +231,29 @@ export class LogParserService {
 
     const firstLine = lines[0];
 
-    // Try to detect ZScaler format (comma-separated with specific fields)
-    if (firstLine.includes(',') && firstLine.includes('source_ip') && firstLine.includes('destination_ip')) {
-      return { entries: this.parseZScalerLogs(content), format: 'zscaler' };
-    }
-
-    // Try to detect web server format (space-separated with brackets)
-    if (firstLine.includes('[') && firstLine.includes(']') && firstLine.includes('"')) {
+    // Try to detect web server format (space-separated with brackets and quotes)
+    if (firstLine.includes('[') && firstLine.includes(']') && firstLine.includes('"') && firstLine.includes('HTTP/')) {
       return { entries: this.parseWebServerLogs(content), format: 'webserver' };
     }
 
-    // Default to ZScaler format for now
-    return { entries: this.parseZScalerLogs(content), format: 'zscaler' };
+    // Try to detect ZScaler format (comma-separated with timestamp at start)
+    // ZScaler format: timestamp,source_ip,destination_ip,user_agent,url,action,status_code,bytes_sent,bytes_received
+    if (firstLine.includes(',') && firstLine.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)) {
+      return { entries: this.parseZScalerLogs(content), format: 'zscaler' };
+    }
+
+    // Try to detect ZScaler format with different timestamp format
+    if (firstLine.includes(',') && firstLine.match(/^\d{2}\/\w{3}\/\d{4}:\d{2}:\d{2}:\d{2}/)) {
+      return { entries: this.parseZScalerLogs(content), format: 'zscaler' };
+    }
+
+    // Default to ZScaler format for comma-separated logs
+    if (firstLine.includes(',')) {
+      return { entries: this.parseZScalerLogs(content), format: 'zscaler' };
+    }
+
+    // Default to web server format for space-separated logs
+    return { entries: this.parseWebServerLogs(content), format: 'webserver' };
   }
 
   // Generate analysis summary from parsed entries

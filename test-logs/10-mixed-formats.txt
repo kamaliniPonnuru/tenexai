@@ -1,0 +1,14 @@
+# ZScaler format
+2024-01-15T11:05:15Z,192.168.1.800,10.0.0.700,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://www.google.com/search?q=test,GET,200,1024,2048
+
+# Apache format
+192.168.1.801 - - [15/Jan/2024:11:05:20 +0000] "GET /api/users HTTP/1.1" 200 1024 "https://example.com/dashboard" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+
+# ZScaler format
+2024-01-15T11:05:25Z,192.168.1.802,10.0.0.702,curl/7.68.0,https://example.com/admin,GET,403,512,256
+
+# Apache format
+192.168.1.803 - - [15/Jan/2024:11:05:30 +0000] "POST /login HTTP/1.1" 401 256 "https://example.com/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+
+# ZScaler format
+2024-01-15T11:05:35Z,192.168.1.804,10.0.0.704,sqlmap/1.5.12,https://example.com/api/users' OR '1'='1,POST,400,128,64 

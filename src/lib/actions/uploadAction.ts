@@ -95,10 +95,29 @@ export async function uploadFileAction(formData: FormData) {
     try {
       const content = buffer.toString('utf-8');
       console.log('📄 Content preview:', content.substring(0, 200) + '...');
+      console.log('📄 Total content length:', content.length);
+      console.log('📄 Number of lines:', content.split('\n').length);
       
       const { entries, format } = LogParserService.autoParseLogs(content);
       console.log('📊 Parsed entries:', entries.length);
       console.log('🔧 Detected format:', format);
+      
+      // Debug: Show first few entries if any
+      if (entries.length > 0) {
+        console.log('📊 First entry sample:', {
+          timestamp: entries[0].timestamp,
+          source_ip: entries[0].source_ip,
+          url: entries[0].url,
+          action: entries[0].action,
+          severity: entries[0].severity
+        });
+      } else {
+        console.log('⚠️ No entries parsed - this might indicate a parsing issue');
+        console.log('📄 First few lines of content:');
+        content.split('\n').slice(0, 5).forEach((line, index) => {
+          console.log(`  Line ${index + 1}:`, line);
+        });
+      }
       
       let logType = 'unknown';
       if (format === 'zscaler') {
@@ -125,32 +144,55 @@ export async function uploadFileAction(formData: FormData) {
         console.log('📊 Number of entries to save:', entries.length);
         
         if (entries.length > 0) {
-          const logEntries = entries.map(entry => {
-            // Validate and clean IP addresses
-            const cleanSourceIP = isValidIP(entry.source_ip) ? entry.source_ip : null;
-            const cleanDestIP = isValidIP(entry.destination_ip) ? entry.destination_ip : null;
+          // Validate entries before saving
+          const validEntries = entries.filter(entry => {
+            // Check if timestamp is valid
+            if (!entry.timestamp || isNaN(entry.timestamp.getTime())) {
+              console.warn('⚠️ Skipping entry with invalid timestamp:', entry);
+              return false;
+            }
             
-            return {
-              user_id: userId,
-              filename,
-              log_type: logType,
-              timestamp: entry.timestamp,
-              source_ip: cleanSourceIP,
-              destination_ip: cleanDestIP,
-              user_agent: entry.user_agent,
-              url: entry.url,
-              action: entry.action,
-              status_code: entry.status_code,
-              bytes_sent: entry.bytes_sent,
-              bytes_received: entry.bytes_received,
-              threat_category: entry.threat_category,
-              severity: entry.severity
-            };
+            // Check if required fields are present
+            if (!entry.url || !entry.action) {
+              console.warn('⚠️ Skipping entry with missing required fields:', entry);
+              return false;
+            }
+            
+            return true;
           });
+          
+          console.log('📊 Valid entries to save:', validEntries.length);
+          
+          if (validEntries.length > 0) {
+            const logEntries = validEntries.map(entry => {
+              // Validate and clean IP addresses
+              const cleanSourceIP = isValidIP(entry.source_ip) ? entry.source_ip : null;
+              const cleanDestIP = isValidIP(entry.destination_ip) ? entry.destination_ip : null;
+              
+              return {
+                user_id: userId,
+                filename,
+                log_type: logType,
+                timestamp: entry.timestamp,
+                source_ip: cleanSourceIP,
+                destination_ip: cleanDestIP,
+                user_agent: entry.user_agent,
+                url: entry.url,
+                action: entry.action,
+                status_code: entry.status_code,
+                bytes_sent: entry.bytes_sent,
+                bytes_received: entry.bytes_received,
+                threat_category: entry.threat_category,
+                severity: entry.severity
+              };
+            });
 
-          console.log('📊 First log entry sample:', logEntries[0]);
-          await LogAnalysisModel.saveLogEntries(logEntries);
-          console.log('✅ Log entries saved');
+            console.log('📊 First log entry sample:', logEntries[0]);
+            await LogAnalysisModel.saveLogEntries(logEntries);
+            console.log('✅ Log entries saved');
+          } else {
+            console.log('⚠️ No valid log entries to save');
+          }
         } else {
           console.log('⚠️ No log entries to save');
         }
