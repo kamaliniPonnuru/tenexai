@@ -16,8 +16,8 @@ export interface AIAnalysisResult {
 
 export interface LogEntry {
   timestamp: string;
-  source_ip: string;
-  destination_ip: string;
+  source_ip: string | null;
+  destination_ip: string | null;
   url: string;
   action: string;
   status_code: number;
@@ -106,7 +106,8 @@ Focus on:
     }
 
     const totalEntries = logEntries.length;
-    const uniqueIPs = new Set(logEntries.map(entry => entry.source_ip)).size;
+    const validIPEntries = logEntries.filter(entry => entry.source_ip !== null);
+    const uniqueIPs = new Set(validIPEntries.map(entry => entry.source_ip)).size;
     const uniqueURLs = new Set(logEntries.map(entry => entry.url)).size;
     
     // Count by severity
@@ -143,6 +144,7 @@ Focus on:
 
     return `
 Total Log Entries: ${totalEntries}
+Valid IP Entries: ${validIPEntries.length}
 Unique Source IPs: ${uniqueIPs}
 Unique URLs: ${uniqueURLs}
 
@@ -161,7 +163,7 @@ Sample Suspicious Entries:
 ${logEntries
   .filter(entry => entry.severity === 'high' || entry.severity === 'critical')
   .slice(0, 5)
-  .map(entry => `- ${entry.timestamp}: ${entry.source_ip} -> ${entry.url} (${entry.severity})`)
+  .map(entry => `- ${entry.timestamp}: ${entry.source_ip || 'N/A'} -> ${entry.url} (${entry.severity})`)
   .join('\n')}
 `;
   }
@@ -190,7 +192,7 @@ ${logEntries
       ],
       ioc_indicators: logEntries
         .filter(e => e.severity === 'high' || e.severity === 'critical')
-        .map(e => `${e.source_ip} - ${e.url}`)
+        .map(e => `${e.source_ip || 'N/A'} - ${e.url}`)
         .slice(0, 10),
       attack_patterns: ['Basic pattern detection active', 'AI analysis unavailable']
     };
