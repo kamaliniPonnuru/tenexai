@@ -1,0 +1,11 @@
+timestamp,source_ip,destination_ip,user_agent,url,action,status_code,bytes_sent,bytes_received,threat_category,severity
+2024-01-15 10:30:15,192.168.1.100,203.0.113.45,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://example.com/login,POST,200,1024,512,Normal,low
+2024-01-15 10:30:20,192.168.1.101,198.51.100.25,curl/7.68.0,https://admin.example.com/config.php,GET,404,0,256,Suspicious User Agent,medium
+2024-01-15 10:30:25,192.168.1.102,203.0.113.50,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://example.com/downloads/setup.exe,GET,200,2048,1024,Suspicious File Access,high
+2024-01-15 10:30:30,192.168.1.103,198.51.100.30,python-requests/2.25.1,https://example.com/api/users,POST,403,0,128,Suspicious User Agent,medium
+2024-01-15 10:30:35,192.168.1.104,203.0.113.55,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://example.com/search?q=javascript:alert(1),GET,200,512,256,Client Error,low
+2024-01-15 10:30:40,192.168.1.105,198.51.100.35,nmap/7.80,https://example.com/phpmyadmin,GET,404,0,256,Suspicious User Agent,high
+2024-01-15 10:30:45,192.168.1.106,203.0.113.60,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://example.com/admin/delete_user?id=123,DELETE,500,0,512,Modification Attempt,high
+2024-01-15 10:30:50,192.168.1.107,198.51.100.40,sqlmap/1.5.12,https://example.com/login?username=admin'--,POST,200,1024,256,Suspicious User Agent,critical
+2024-01-15 10:30:55,192.168.1.108,203.0.113.65,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,https://example.com/uploads/script.vbs,GET,200,1536,768,Suspicious File Access,high
+2024-01-15 10:31:00,192.168.1.109,198.51.100.45,nikto/2.1.6,https://example.com/cgi-bin/test.cgi,GET,404,0,256,Suspicious User Agent,high 

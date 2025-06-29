@@ -1,0 +1,11 @@
+timestamp,level,component,user_id,ip_address,event,details,threat_category,severity
+2024-01-15 10:30:15,INFO,auth,user123,192.168.1.100,login_success,User logged in successfully,Normal,low
+2024-01-15 10:30:20,WARN,auth,unknown,198.51.100.15,login_failed,Multiple failed login attempts,Brute Force Attack,high
+2024-01-15 10:30:25,ERROR,api,user456,203.0.113.20,invalid_request,Malformed API request received,Client Error,low
+2024-01-15 10:30:30,CRITICAL,security,unknown,198.51.100.25,sql_injection,SQL injection attempt blocked,SQL Injection,high
+2024-01-15 10:30:35,INFO,file_upload,user789,192.168.1.104,file_uploaded,Document uploaded successfully,Normal,low
+2024-01-15 10:30:40,ERROR,file_upload,unknown,203.0.113.30,malware_detected,Suspicious file upload blocked,Malware Upload,high
+2024-01-15 10:30:45,WARN,admin,user123,192.168.1.106,privilege_escalation,Unauthorized admin access attempt,Privilege Escalation,high
+2024-01-15 10:30:50,CRITICAL,security,unknown,198.51.100.45,exploit_attempt,Exploit attempt detected and blocked,Exploit Attempt,critical
+2024-01-15 10:30:55,INFO,user_management,user456,192.168.1.108,profile_updated,User profile updated successfully,Normal,low
+2024-01-15 10:31:00,ERROR,api,unknown,203.0.113.50,rate_limit_exceeded,API rate limit exceeded,Rate Limiting,medium 

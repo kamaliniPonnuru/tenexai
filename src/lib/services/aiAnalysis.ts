@@ -58,7 +58,7 @@ Focus on:
 `;
 
       const completion = await openai.chat.completions.create({
-        model: "gpt-4-turbo",
+        model: "gpt-3.5-turbo",
         messages: [
           {
             role: "system",
@@ -246,7 +246,7 @@ Provide a brief analysis of potential threats and recommended actions.
 `;
 
       const completion = await openai.chat.completions.create({
-        model: "gpt-4-turbo",
+        model: "gpt-3.5-turbo",
         messages: [
           {
             role: "system",
