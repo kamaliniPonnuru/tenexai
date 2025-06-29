@@ -59,7 +59,6 @@ export default function Dashboard() {
   const [logEntries, setLogEntries] = useState<LogEntry[]>([]);
   const [aiInsights, setAiInsights] = useState<AIInsights | null>(null);
   const [executiveSummary, setExecutiveSummary] = useState<string>('');
-  const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [loadingAnalysis, setLoadingAnalysis] = useState(false);
@@ -603,10 +602,9 @@ export default function Dashboard() {
                       <h2 className="text-lg font-semibold text-gray-900">AI Executive Summary</h2>
                       <button
                         onClick={regenerateAIAnalysis}
-                        disabled={loading}
-                        className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                        className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
                       >
-                        {loading ? 'Regenerating...' : 'Regenerate AI Analysis'}
+                        Regenerate AI Analysis
                       </button>
                     </div>
                     <div className="prose max-w-none">
