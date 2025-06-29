@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { uploadFileAction } from '@/lib/actions/uploadAction';
+import { testAction } from '@/lib/actions/testAction';
 
 interface LogEntry {
   id: number;
@@ -65,6 +66,7 @@ export default function Dashboard() {
   const [userRole, setUserRole] = useState<string>('enduser');
   const [userName, setUserName] = useState<string>('');
   const [deletingFile, setDeletingFile] = useState<number | null>(null);
+  const [testResult, setTestResult] = useState<string>('');
 
   useEffect(() => {
     // Check if user is logged in
@@ -90,6 +92,18 @@ export default function Dashboard() {
       }
     } catch (error) {
       console.error('Error fetching files:', error);
+    }
+  };
+
+  const testServerAction = async () => {
+    try {
+      console.log('🧪 Testing server action...');
+      const result = await testAction();
+      console.log('📥 Test result:', result);
+      setTestResult(JSON.stringify(result, null, 2));
+    } catch (error) {
+      console.error('❌ Test failed:', error);
+      setTestResult(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
@@ -128,8 +142,8 @@ export default function Dashboard() {
           fetchFiles(userId);
         }, 1000);
       } else {
-        console.error('❌ Upload failed:', result.error);
-        throw new Error(result.error || 'Upload failed');
+        console.error('❌ Upload failed:', result.error, result.details);
+        throw new Error(result.error || result.details || 'Upload failed');
       }
     } catch (error) {
       console.error('❌ Upload error:', error);
@@ -417,6 +431,22 @@ export default function Dashboard() {
           <div className="space-y-6">
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
               <h2 className="text-lg font-semibold text-white mb-4">Upload Log File</h2>
+              
+              {/* Test Server Action Button */}
+              <div className="mb-6 p-4 bg-white/5 rounded-lg border border-white/10">
+                <h3 className="text-sm font-medium text-white mb-2">Debug: Test Server Action</h3>
+                <button
+                  onClick={testServerAction}
+                  className="px-4 py-2 text-sm font-medium text-white bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 transition-colors"
+                >
+                  Test Server Action
+                </button>
+                {testResult && (
+                  <div className="mt-3 p-3 bg-black/20 rounded text-xs font-mono text-white/80 overflow-auto">
+                    <pre>{testResult}</pre>
+                  </div>
+                )}
+              </div>
               
               {/* Upload Area */}
               <div className="border-2 border-dashed border-white/20 rounded-xl p-12 text-center hover:border-white/40 transition-colors">
