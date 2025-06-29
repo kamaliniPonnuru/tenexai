@@ -64,56 +64,21 @@ export async function uploadFileAction(formData: FormData) {
     console.log('📂 Current working directory:', process.cwd());
     console.log('📂 Directory exists check:', existsSync(uploadsDir));
     
-    try {
-      // Check if directory already exists
-      if (!existsSync(uploadsDir)) {
-        await mkdir(uploadsDir, { recursive: true });
-        console.log('✅ Uploads directory created');
-      } else {
-        console.log('✅ Uploads directory already exists');
-      }
-      
-      // Test write permissions
-      const testFile = join(uploadsDir, 'test-write.txt');
-      await writeFile(testFile, 'test');
-      await unlink(testFile);
-      console.log('✅ Write permissions verified');
-      
-    } catch (dirError) {
-      console.error('❌ Error with uploads directory:', dirError);
-      console.error('❌ Error details:', {
-        message: dirError instanceof Error ? dirError.message : 'Unknown error',
-        code: (dirError as NodeJS.ErrnoException)?.code,
-        errno: (dirError as NodeJS.ErrnoException)?.errno
-      });
-      return {
-        success: false,
-        error: 'Failed to create or access uploads directory',
-        details: dirError instanceof Error ? dirError.message : 'Unknown directory error'
-      };
-    }
-
-    // Generate unique filename
+    // Skip directory creation for now - process file from memory
+    console.log('⚠️ Skipping file system operations, processing from memory');
+    
+    // Generate unique filename (for database reference only)
     const timestamp = Date.now();
     const filename = `${timestamp}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-    const filepath = join(uploadsDir, filename);
     console.log('📝 Generated filename:', filename);
-    console.log('📁 Full filepath:', filepath);
 
-    // Save file to disk
-    console.log('💾 Saving file to disk...');
+    // Process file from memory
+    console.log('💾 Processing file from memory...');
     let buffer: Buffer;
     try {
       const bytes = await file.arrayBuffer();
       buffer = Buffer.from(bytes);
-      
-      // Try to save to disk, but don't fail if it doesn't work
-      try {
-        await writeFile(filepath, buffer);
-        console.log('✅ File saved to disk');
-      } catch (diskError) {
-        console.warn('⚠️ Could not save file to disk, continuing with memory processing:', diskError);
-      }
+      console.log('✅ File processed from memory');
     } catch (fileError) {
       console.error('❌ Error processing file:', fileError);
       return {
