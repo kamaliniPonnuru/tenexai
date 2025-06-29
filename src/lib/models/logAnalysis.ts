@@ -207,12 +207,26 @@ export class LogAnalysisModel {
 
   // Get analysis results for a file
   static async getAnalysis(fileId: number, userId: number): Promise<LogAnalysis | null> {
-    const query = `
-      SELECT * FROM log_analysis 
+    // First get the filename from uploaded_files table
+    const fileQuery = `
+      SELECT filename FROM uploaded_files 
       WHERE id = $1 AND user_id = $2
     `;
     
-    const result = await pool.query(query, [fileId, userId]);
+    const fileResult = await pool.query(fileQuery, [fileId, userId]);
+    if (fileResult.rows.length === 0) {
+      return null;
+    }
+
+    const filename = fileResult.rows[0].filename;
+
+    // Then get the analysis using the filename
+    const analysisQuery = `
+      SELECT * FROM log_analysis 
+      WHERE filename = $1 AND user_id = $2
+    `;
+    
+    const result = await pool.query(analysisQuery, [filename, userId]);
     return result.rows[0] || null;
   }
 
