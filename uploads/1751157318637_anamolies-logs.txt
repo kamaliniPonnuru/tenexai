@@ -1,0 +1,10 @@
+2025-06-29T02:15:30Z 192.168.1.100 10.0.0.50 "Mozilla/5.0" http://malware-distribution.com/payload.exe GET 200 2048 1024 malware critical
+2025-06-29T02:16:45Z 192.168.1.101 10.0.0.51 "curl/7.68.0" http://victim.com/admin.php?id=1'OR'1'='1 GET 200 1567 890 sql_injection critical
+2025-06-29T02:17:20Z 192.168.1.102 10.0.0.52 "sqlmap/1.4.12" http://target.com/login.php POST 403 0 0 sql_injection high
+2025-06-29T02:18:10Z 192.168.1.103 10.0.0.53 "nmap/7.80" http://scan-target.com/robots.txt GET 200 234 567 port_scanning high
+2025-06-29T02:19:00Z 192.168.1.104 10.0.0.54 "Mozilla/5.0" http://phishing-site.com/verify-account GET 200 3456 1234 phishing high
+2025-06-29T02:20:15Z 192.168.1.105 10.0.0.55 "wget/1.20.3" http://suspicious.com/download.ps1 GET 200 4096 2048 powershell_execution critical
+2025-06-29T02:21:30Z 192.168.1.106 10.0.0.56 "Mozilla/5.0" http://legitimate.com/../../etc/passwd GET 200 1234 567 path_traversal high
+2025-06-29T02:22:45Z 192.168.1.107 10.0.0.57 "python-requests/2.25.1" http://api.target.com/users?id=1;DROP TABLE users; GET 200 890 1234 sql_injection critical
+2025-06-29T02:23:10Z 192.168.1.108 10.0.0.58 "Mozilla/5.0" http://fake-bank.com/login POST 200 2345 6789 credential_theft high
+2025-06-29T02:24:00Z 192.168.1.109 10.0.0.59 "Mozilla/5.0" http://malicious.com/s
