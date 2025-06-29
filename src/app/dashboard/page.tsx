@@ -94,22 +94,36 @@ export default function Dashboard() {
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file || !userId) return;
+    console.log('📁 File selected:', file);
+    console.log('👤 User ID:', userId);
+    
+    if (!file || !userId) {
+      console.log('❌ Missing file or user ID');
+      return;
+    }
 
     setUploading(true);
     setUploadProgress(0);
+    console.log('🚀 Starting upload...');
 
     const formData = new FormData();
     formData.append('file', file);
     formData.append('userId', userId.toString());
+    
+    console.log('📋 Form data prepared');
 
     try {
+      console.log('📤 Sending upload request...');
       const response = await fetch('/api/logs/upload', {
         method: 'POST',
         body: formData,
       });
 
+      console.log('📥 Response received:', response.status, response.statusText);
+      
       if (response.ok) {
+        const result = await response.json();
+        console.log('✅ Upload successful:', result);
         setUploadProgress(100);
         setTimeout(() => {
           setUploading(false);
@@ -117,12 +131,15 @@ export default function Dashboard() {
           fetchFiles(userId);
         }, 1000);
       } else {
-        throw new Error('Upload failed');
+        const errorData = await response.json();
+        console.error('❌ Upload failed:', errorData);
+        throw new Error(`Upload failed: ${errorData.error || response.statusText}`);
       }
     } catch (error) {
-      console.error('Upload error:', error);
+      console.error('❌ Upload error:', error);
       setUploading(false);
       setUploadProgress(0);
+      alert(`Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
