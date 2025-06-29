@@ -1,95 +1,81 @@
-# TenexAI - AI-Powered Cybersecurity Platform
+# TenexAI - AI-Powered Cybersecurity Log Analysis Platform
 
-**TenexAI** is a comprehensive SOC (Security Operations Center) analysis platform that leverages artificial intelligence to detect threats, analyze log files, and provide actionable insights for cybersecurity professionals. Built with a modern black and white aesthetic and role-based access control.
+![TenexAI Logo](https://img.shields.io/badge/TenexAI-Cybersecurity%20Platform-black?style=for-the-badge&logo=shield)
 
-![TenexAI Platform](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
-![Next.js](https://img.shields.io/badge/Next.js-14-black)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
-![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4-green)
+A full-stack web application that allows security analysts to upload log files, parse them using AI, and display comprehensive threat analysis in a human-consumable format. Built with Next.js, TypeScript, PostgreSQL, and OpenAI GPT-4.
+
+## 🚀 Live Demo
+
+**Live Application**: [TenexAI on Vercel](https://tenexai.vercel.app)
 
 ## ✨ Features
 
-### 🔐 **Authentication & Role-Based Access Control**
-- **Three User Roles**:
-  - **Admin**: Full access including user management, database status, and all features
-  - **Tester**: Access to database status and testing features
-  - **End User**: Basic access to upload and analyze logs
-- Secure user registration and login with password validation
-- Password hashing using bcrypt
-- Session management with localStorage
-- Input validation and sanitization
-- Profile management with password updates
+### 🔐 Authentication & Security
+- **User Registration & Login**: Secure authentication system
+- **Password Reset**: Complete forgot password functionality with email integration
+- **Role-Based Access**: Admin, Tester, and End User roles
+- **Session Management**: Secure user sessions
 
-### 🎨 **Modern UI/UX Design**
-- **Black & White Aesthetic**: Sophisticated monochrome design
-- **Glass-morphism**: Modern card designs with backdrop blur effects
-- **Responsive Design**: Optimized for all devices
-- **Smooth Animations**: Hover effects and transitions
-- **Custom Scrollbars**: Styled to match the theme
-- **Accessibility**: Proper focus states and keyboard navigation
-
-### 📁 **Log File Processing**
-- Support for multiple log formats:
+### 📁 Log File Processing
+- **Multi-Format Support**: 
   - ZScaler Web Proxy logs
+  - ZScaler Firewall logs
+  - ZScaler DNS logs
+  - ZScaler SSL logs
+  - ZScaler Threat logs
   - Apache/Nginx web server logs
-  - Generic text-based log files
-- Drag & drop file upload interface
-- Real-time upload progress tracking
-- File size validation (up to 10MB)
-- File deletion with confirmation
-- File status tracking (processing/completed/failed)
+- **Drag & Drop Upload**: User-friendly file upload interface
+- **Real-time Processing**: Instant log parsing and analysis
 
-### 🤖 **AI-Powered Analysis**
-- **GPT-4 Integration**: Advanced threat detection using OpenAI's GPT-4 model
-- **Threat Level Assessment**: Automatic classification (Low/Medium/High/Critical)
-- **Indicators of Compromise (IOCs)**: Automated extraction of suspicious patterns
-- **Attack Pattern Recognition**: Identification of common attack techniques
-- **Executive Summaries**: Natural language reports for SOC analysts
-- **Actionable Recommendations**: Specific guidance for incident response
-- **AI Regeneration**: Ability to regenerate AI analysis for existing files
+### 🤖 AI-Powered Analysis
+- **OpenAI GPT-4 Integration**: Advanced threat analysis and executive summaries
+- **Pattern Recognition**: Automatic detection of suspicious activities
+- **Threat Scoring**: Severity classification (Low/Medium/High/Critical)
+- **Anomaly Detection**: Identification of unusual patterns and behaviors
 
-### 📊 **Analytics & Visualization**
-- Real-time log analysis and parsing
-- Threat severity distribution charts
-- Top source/destination IP analysis
-- Timeline visualization of security events
-- Detailed log entry tables with filtering
-- Database status monitoring (Admin/Tester only)
-- User management dashboard (Admin only)
+### 📊 Comprehensive Dashboard
+- **Timeline Visualization**: Chronological event timeline
+- **Threat Summary**: AI-generated executive summaries
+- **Statistics Dashboard**: 
+  - Total entries processed
+  - Time range analysis
+  - Severity distribution
+  - Top source/destination IPs
+- **Sample Log Entries**: Detailed view of parsed log data
 
-### 🗄️ **Database & Storage**
-- PostgreSQL database with Railway integration
-- Structured log entry storage
-- Analysis result caching
-- User data management
-- Role-based data access
-- Automatic database initialization
+### 🔍 Advanced Threat Detection
+- **SQL Injection Detection**: Identifies SQL injection attempts
+- **XSS Detection**: Cross-site scripting attempt recognition
+- **Suspicious File Access**: Detection of malicious file downloads
+- **Scanning Tools**: Recognition of security scanning tools (nmap, sqlmap, etc.)
+- **Error Analysis**: HTTP status code analysis for potential attacks
 
 ## 🛠️ Technology Stack
 
-### **Frontend**
-- **Next.js 14** - React framework with App Router
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Modern, responsive UI
-- **React Hooks** - State management
-- **Custom CSS** - Black and white theme with glass-morphism
+### Frontend
+- **Next.js 15**: React framework with App Router
+- **TypeScript**: Type-safe development
+- **Tailwind CSS**: Modern, responsive styling
+- **React Hooks**: State management
+- **Framer Motion**: Smooth animations
 
-### **Backend**
-- **Next.js API Routes** - Serverless API endpoints
-- **Node.js** - JavaScript runtime
-- **PostgreSQL** - Primary database
-- **Railway** - Database hosting
+### Backend
+- **Next.js API Routes**: Serverless API endpoints
+- **Node.js**: JavaScript runtime
+- **PostgreSQL**: Relational database (Railway)
+- **bcryptjs**: Password hashing
+- **OpenAI API**: GPT-4 integration for AI analysis
 
-### **AI/ML**
-- **OpenAI GPT-4** - Advanced threat analysis
-- **Custom AI Service** - Specialized cybersecurity prompts
-- **Fallback Analysis** - Rule-based detection when AI unavailable
+### Database
+- **Railway PostgreSQL**: Cloud-hosted database
+- **User Management**: Complete user authentication system
+- **Log Storage**: Secure file and analysis storage
+- **Password Reset**: Token-based password reset system
 
-### **Security**
-- **bcrypt** - Password hashing
-- **Input Validation** - XSS and injection protection
-- **SSL/TLS** - Secure database connections
-- **Role-based Access Control** - User permission management
+### Deployment
+- **Vercel**: Frontend and API deployment
+- **Railway**: Database hosting
+- **Environment Variables**: Secure configuration management
 
 ## 🚀 Quick Start
 
@@ -99,130 +85,47 @@
 - PostgreSQL database (Railway recommended)
 - OpenAI API key
 
-### 1. Clone and Install
-```bash
-git clone <repository-url>
-cd my-app
-npm install
-```
+### Installation
 
-### 2. Environment Setup
-Create a `.env.local` file in the root directory:
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/kamaliniPonnuru/tenexai.git
+   cd tenexai/my-app
+   ```
 
-```env
-# Database Configuration
-DATABASE_PUBLIC_URL=your_railway_postgres_url
-# OR individual variables:
-DB_USER=postgres
-DB_HOST=your_host
-DB_NAME=tenexai
-DB_PASSWORD=your_password
-DB_PORT=5432
-DB_SSL=true
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-# OpenAI Configuration
-OPENAI_API_KEY=your_openai_api_key
+3. **Set up environment variables**
+   Create a `.env.local` file in the root directory:
+   ```env
+   # Database
+   DATABASE_URL=your_postgresql_connection_string
+   
+   # OpenAI
+   OPENAI_API_KEY=your_openai_api_key
+   
+   # App Configuration
+   NEXT_PUBLIC_APP_URL=http://localhost:3000
+   
+   # JWT Secret (generate a random string)
+   JWT_SECRET=your_jwt_secret_here
+   ```
 
-# Next.js Configuration
-NEXTAUTH_SECRET=your_secret_key
-NEXTAUTH_URL=http://localhost:3000
-```
+4. **Initialize the database**
+   ```bash
+   npm run db:init
+   ```
 
-### 3. Database Setup
-The application will automatically create required tables on first run. For role-based system setup:
+5. **Run the development server**
+   ```bash
+   npm run dev
+   ```
 
-```bash
-# Initialize roles and create test users
-node scripts/init-roles.js
-```
-
-### 4. Run Development Server
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## 👥 User Roles & Permissions
-
-### **Admin Role**
-- ✅ Full access to all features
-- ✅ User management (view all users, update roles)
-- ✅ Database status monitoring
-- ✅ System administration
-- ✅ File upload and analysis
-- ✅ Profile management
-
-### **Tester Role**
-- ✅ Database status access
-- ✅ File upload and analysis
-- ✅ Profile management
-- ❌ User management
-- ❌ System administration
-
-### **End User Role**
-- ✅ File upload and analysis
-- ✅ Profile management
-- ❌ Database status access
-- ❌ User management
-- ❌ System administration
-
-## 🤖 AI Integration Documentation
-
-### **How AI is Used in TenexAI**
-
-#### 1. **Threat Detection & Analysis**
-- **Location**: `src/lib/services/aiAnalysis.ts`
-- **Purpose**: Analyze log entries for suspicious patterns and potential threats
-- **AI Model**: GPT-4 with specialized cybersecurity prompts
-- **Input**: Structured log data with timestamps, IPs, URLs, status codes
-- **Output**: Threat level, confidence score, insights, recommendations
-
-#### 2. **Executive Summary Generation**
-- **Function**: `generateExecutiveSummary()`
-- **Purpose**: Create natural language reports for SOC analysts
-- **Format**: Markdown-formatted executive summaries
-- **Content**: Threat assessment, key findings, actionable recommendations
-
-#### 3. **Individual Entry Analysis**
-- **Function**: `analyzeSuspiciousEntry()`
-- **Purpose**: Deep-dive analysis of specific suspicious log entries
-- **Use Case**: When analysts need detailed explanation of flagged events
-
-#### 4. **Fallback Mechanism**
-- **Purpose**: Ensure system works even when AI is unavailable
-- **Implementation**: Rule-based pattern matching
-- **Features**: Basic threat detection, severity classification
-
-### **AI Prompt Engineering**
-
-The system uses carefully crafted prompts to ensure accurate cybersecurity analysis:
-
-```typescript
-const prompt = `
-You are a cybersecurity expert analyzing web proxy logs for threat detection. 
-Analyze the following log data and provide insights:
-
-LOG SUMMARY:
-${logSummary}
-
-Please provide analysis in the following JSON format:
-{
-  "threat_level": "low|medium|high|critical",
-  "confidence": 0.85,
-  "insights": ["insight1", "insight2"],
-  "recommendations": ["recommendation1", "recommendation2"],
-  "ioc_indicators": ["indicator1", "indicator2"],
-  "attack_patterns": ["pattern1", "pattern2"]
-}
-`;
-```
-
-### **AI Configuration**
-- **Model**: GPT-4 for best accuracy
-- **Temperature**: 0.3 for consistent, focused responses
-- **Max Tokens**: 1000 for comprehensive analysis
-- **System Role**: Cybersecurity expert specializing in log analysis
+6. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
 ## 📁 Project Structure
 
@@ -232,173 +135,151 @@ my-app/
 │   ├── app/                    # Next.js App Router
 │   │   ├── api/               # API routes
 │   │   │   ├── auth/          # Authentication endpoints
-│   │   │   ├── admin/         # Admin management endpoints
-│   │   │   ├── users/         # User profile endpoints
-│   │   │   └── logs/          # Log processing endpoints
-│   │   ├── admin/             # Admin dashboard
+│   │   │   └── logs/          # Log analysis endpoints
 │   │   ├── dashboard/         # Main dashboard page
-│   │   ├── profile/           # User profile page
-│   │   ├── db-status/         # Database status page
 │   │   ├── login/             # Login page
-│   │   └── register/          # Registration page
-│   ├── lib/
-│   │   ├── db.ts             # Database connection
-│   │   ├── init-db.ts        # Database initialization
-│   │   ├── models/           # Data models
-│   │   │   ├── user.ts       # User model with roles
-│   │   │   └── logAnalysis.ts # Log analysis model
-│   │   └── services/         # Business logic
-│   │       ├── logParser.ts  # Log parsing service
-│   │       └── aiAnalysis.ts # AI analysis service
-│   └── components/           # Reusable UI components
-├── public/                   # Static assets
-│   └── favicon.svg          # Custom TenexAI favicon
-├── scripts/                  # Utility scripts
-│   └── init-roles.js        # Role initialization script
-└── docs/                     # Documentation
+│   │   ├── register/          # Registration page
+│   │   ├── forgot-password/   # Password reset request
+│   │   └── reset-password/    # Password reset form
+│   ├── lib/                   # Core libraries
+│   │   ├── models/            # Database models
+│   │   ├── services/          # Business logic services
+│   │   └── actions/           # Server actions
+│   └── components/            # React components
+├── test-logs/                 # Sample log files for testing
+├── public/                    # Static assets
+└── package.json
 ```
 
-## 🎨 Design System
+## 🤖 AI Model & Anomaly Detection
 
-### **Color Palette**
-- **Primary Background**: `#000000` (Pure Black)
-- **Secondary Background**: `#0a0a0a` (Dark Gray)
-- **Primary Text**: `#ffffff` (Pure White)
-- **Secondary Text**: `#ffffff` with opacity variations
-- **Accent**: `#ffffff` (White with opacity)
+### OpenAI GPT-4 Integration
+The application uses OpenAI's GPT-4 model for advanced log analysis:
 
-### **Typography**
-- **Font Family**: Inter, system fonts
-- **Font Weights**: 400 (Regular), 500 (Medium), 600 (Semibold), 700 (Bold)
-- **Line Height**: 1.6 for optimal readability
+- **Executive Summaries**: AI-generated comprehensive threat summaries
+- **Pattern Recognition**: Identification of complex attack patterns
+- **Contextual Analysis**: Understanding of log context and relationships
+- **Threat Classification**: Intelligent categorization of security events
 
-### **Components**
-- **Cards**: Glass-morphism with `bg-white/5 backdrop-blur-sm`
-- **Buttons**: White background with black text, hover animations
-- **Inputs**: Transparent backgrounds with white borders
-- **Icons**: SVG icons with consistent sizing
+### Anomaly Detection Features
+The system implements multiple layers of anomaly detection:
 
-## 🚀 Deployment
+1. **Pattern-Based Detection**:
+   - Suspicious URL patterns (`.exe`, `.vbs`, `javascript:`, etc.)
+   - Malicious user agents (nmap, sqlmap, nikto, etc.)
+   - SQL injection attempts (`admin'--`, etc.)
+   - XSS attempts (`javascript:alert(1)`, etc.)
 
-### **Option 1: Vercel (Recommended)**
+2. **Statistical Analysis**:
+   - Unusual request frequencies
+   - Abnormal status code patterns
+   - Suspicious IP address behavior
 
-1. **Connect Repository**
-   ```bash
-   vercel --prod
-   ```
+3. **Threat Scoring System**:
+   - **Critical**: Direct attack attempts, SQL injection, file uploads
+   - **High**: Scanning tools, admin access attempts
+   - **Medium**: Error codes, suspicious patterns
+   - **Low**: Normal traffic with minor anomalies
 
-2. **Environment Variables**
-   Set all required environment variables in Vercel dashboard
+### Confidence Scoring
+Each detected anomaly includes:
+- **Confidence Level**: Based on pattern strength and context
+- **Explanation**: Clear reasoning for flagging
+- **Severity**: Impact assessment
+- **Recommendations**: Suggested actions for SOC analysts
 
-3. **Database Setup**
-   Ensure your Railway database is accessible from Vercel
+## 📊 Sample Log Files
 
-### **Option 2: Docker**
+The repository includes comprehensive test log files in the `test-logs/` directory:
 
-1. **Build Image**
-   ```bash
-   docker build -t tenexai .
-   ```
-
-2. **Run Container**
-   ```bash
-   docker run -p 3000:3000 --env-file .env.local tenexai
-   ```
-
-### **Option 3: Railway**
-
-1. **Connect Repository**
-   - Link your GitHub repository to Railway
-   - Railway will automatically detect Next.js
-
-2. **Environment Variables**
-   - Set all required environment variables
-   - Railway will provide database URL automatically
+- **ZScaler Web Proxy**: `01-zscaler-web-proxy.txt`
+- **ZScaler Firewall**: `03-firewall-logs.txt`
+- **Apache Web Server**: `apache-web-server.txt`
+- **Network Traffic**: `05-network-traffic.txt`
+- **Malware Detection**: `06-malware-detection.txt`
+- **Critical Threats**: `07-critical-threats.txt`
 
 ## 🔧 API Endpoints
 
-### **Authentication**
-- `POST /api/auth/signup` - User registration
+### Authentication
 - `POST /api/auth/login` - User login
+- `POST /api/auth/signup` - User registration
+- `POST /api/auth/forgot-password` - Password reset request
+- `POST /api/auth/reset-password` - Password reset confirmation
 
-### **User Management**
-- `GET /api/users/profile` - Get user profile
-- `PUT /api/users/profile` - Update password
-- `GET /api/admin/users` - Get all users (Admin only)
-- `PUT /api/admin/users` - Update user role (Admin only)
-
-### **Log Processing**
-- `POST /api/logs/upload` - Upload log file
-- `GET /api/logs/files` - Get user's files
-- `DELETE /api/logs/files/[id]` - Delete file
+### Log Analysis
+- `POST /api/logs/upload` - File upload and processing
+- `GET /api/logs/files` - Get user's uploaded files
 - `GET /api/logs/analysis/[id]` - Get analysis results
-- `POST /api/logs/analysis/[id]` - Regenerate AI analysis
+- `GET /api/logs/entries/[id]` - Get parsed log entries
 
-### **System**
-- `GET /api/test-db` - Database status check
+### Admin (Protected)
+- `GET /api/admin/users` - Get all users (admin only)
+- `PUT /api/admin/users/[id]/role` - Update user role
 
-## 🧪 Testing
+## 🚀 Deployment
 
-### **Test Users**
-After running `node scripts/init-roles.js`, you can use these test accounts:
+### Vercel Deployment
+1. Connect your GitHub repository to Vercel
+2. Set environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
 
-- **Admin**: `admin@tenexai.com` / `password`
-- **Tester**: `tester@tenexai.com` / `password`
-- **End User**: `enduser@tenexai.com` / `password`
-
-### **Manual Testing**
-1. Register a new account
-2. Upload a log file
-3. View analysis results
-4. Test role-based access
-5. Update profile and password
+### Railway Database
+1. Create a new PostgreSQL database on Railway
+2. Copy the connection string to your environment variables
+3. The database schema will be automatically initialized
 
 ## 🔒 Security Features
 
 - **Password Hashing**: bcrypt with salt rounds
-- **Input Validation**: XSS and injection protection
-- **Role-based Access**: Granular permission system
-- **Session Management**: Secure localStorage handling
-- **Database Security**: SSL connections and prepared statements
-- **API Protection**: Authentication middleware
+- **JWT Tokens**: Secure session management
+- **Input Validation**: Comprehensive form validation
+- **SQL Injection Prevention**: Parameterized queries
+- **XSS Protection**: Content sanitization
+- **Rate Limiting**: API request throttling
+- **CORS Configuration**: Cross-origin request handling
 
-## 📈 Performance
+## 🧪 Testing
 
-- **Static Generation**: Next.js optimization
-- **Image Optimization**: Automatic image compression
-- **Code Splitting**: Automatic bundle optimization
-- **Database Indexing**: Optimized queries
-- **Caching**: Analysis result caching
+### Manual Testing
+1. Register a new account
+2. Upload sample log files from `test-logs/` directory
+3. Review analysis results in the dashboard
+4. Test password reset functionality
+
+### Sample Test Cases
+- Upload ZScaler web proxy logs
+- Upload Apache web server logs
+- Test anomaly detection with malicious patterns
+- Verify AI-generated summaries
+- Test user role permissions
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 📄 License
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## 🙏 Acknowledgments
 
-For support and questions:
-- Create an issue in the repository
-- Check the documentation
-- Review the API endpoints
+- **OpenAI**: For providing GPT-4 API for advanced analysis
+- **Vercel**: For hosting and deployment platform
+- **Railway**: For database hosting
+- **Next.js Team**: For the amazing React framework
+- **Tailwind CSS**: For the utility-first CSS framework
 
-## 🎯 Roadmap
+## 📞 Support
 
-- [ ] Real-time threat alerts
-- [ ] Integration with SIEM systems
-- [ ] Advanced visualization dashboards
-- [ ] Machine learning model training
-- [ ] Mobile application
-- [ ] API rate limiting
-- [ ] Advanced user analytics
+For support, email support@tenexai.com or create an issue in this repository.
 
 ---
 
 **Built with ❤️ for the cybersecurity community**
+
+*TenexAI - Empowering SOC analysts with AI-driven log analysis*

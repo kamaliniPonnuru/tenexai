@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
@@ -17,18 +17,7 @@ export default function ResetPasswordPage() {
   const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  useEffect(() => {
-    if (!token) {
-      setIsValidToken(false);
-      setMessage({ type: 'error', text: 'Invalid reset link. Please request a new password reset.' });
-      return;
-    }
-
-    // Validate the token
-    validateToken();
-  }, [token]);
-
-  const validateToken = async () => {
+  const validateToken = useCallback(async () => {
     try {
       const response = await fetch(`/api/auth/validate-reset-token?token=${token}`);
       const data = await response.json();
@@ -39,11 +28,22 @@ export default function ResetPasswordPage() {
         setIsValidToken(false);
         setMessage({ type: 'error', text: data.error || 'Invalid or expired reset link.' });
       }
-    } catch (error) {
+    } catch {
       setIsValidToken(false);
       setMessage({ type: 'error', text: 'Failed to validate reset link. Please try again.' });
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    if (!token) {
+      setIsValidToken(false);
+      setMessage({ type: 'error', text: 'Invalid reset link. Please request a new password reset.' });
+      return;
+    }
+
+    // Validate the token
+    validateToken();
+  }, [token, validateToken]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -266,5 +266,13 @@ export default function ResetPasswordPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResetPasswordContent />
+    </Suspense>
   );
 } 
