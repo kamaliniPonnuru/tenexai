@@ -1,4 +1,4 @@
-import { Pool, PoolConfig } from 'pg';
+import { Pool, PoolConfig } from '../../node_modules/@types/pg';
 
 // Parse DATABASE_PUBLIC_URL if available, otherwise use individual env vars
 let poolConfig: PoolConfig = {};

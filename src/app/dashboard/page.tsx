@@ -463,20 +463,22 @@ export default function Dashboard() {
               <h2 className="text-lg font-semibold text-white mb-4">Upload Log File</h2>
               
               {/* Test Server Action Button */}
-              <div className="mb-6 p-4 bg-white/5 rounded-lg border border-white/10">
-                <h3 className="text-sm font-medium text-white mb-2">Debug: Test Server Action</h3>
-                <button
-                  onClick={testServerAction}
-                  className="px-4 py-2 text-sm font-medium text-white bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 transition-colors"
-                >
-                  Test Server Action
-                </button>
-                {testResult && (
-                  <div className="mt-3 p-3 bg-black/20 rounded text-xs font-mono text-white/80 overflow-auto">
-                    <pre>{testResult}</pre>
-                  </div>
-                )}
-              </div>
+              {userRole !== 'enduser' && (
+                <div className="mb-6 p-4 bg-white/5 rounded-lg border border-white/10">
+                  <h3 className="text-sm font-medium text-white mb-2">Debug: Test Server Action</h3>
+                  <button
+                    onClick={testServerAction}
+                    className="px-4 py-2 text-sm font-medium text-white bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 transition-colors"
+                  >
+                    Test Server Action
+                  </button>
+                  {testResult && (
+                    <div className="mt-3 p-3 bg-black/20 rounded text-xs font-mono text-white/80 overflow-auto">
+                      <pre>{testResult}</pre>
+                    </div>
+                  )}
+                </div>
+              )}
               
               {/* Upload Area */}
               <div className="border-2 border-dashed border-white/20 rounded-xl p-12 text-center hover:border-white/40 transition-colors">
