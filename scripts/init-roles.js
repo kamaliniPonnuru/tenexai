@@ -1,10 +1,37 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-});
+// Use the same database configuration as the main app
+let poolConfig = {};
+
+if (process.env.DATABASE_PUBLIC_URL) {
+  // Use the public URL from Railway
+  const url = new URL(process.env.DATABASE_PUBLIC_URL);
+  poolConfig = {
+    user: url.username,
+    host: url.hostname,
+    database: url.pathname.slice(1),
+    password: url.password,
+    port: parseInt(url.port),
+    ssl: {
+      rejectUnauthorized: false
+    }
+  };
+} else {
+  // Fallback to individual environment variables
+  poolConfig = {
+    user: process.env.DB_USER || 'postgres',
+    host: process.env.DB_HOST || 'localhost',
+    database: process.env.DB_NAME || 'tenexai',
+    password: process.env.DB_PASSWORD || 'password',
+    port: parseInt(process.env.DB_PORT || '5432'),
+    ssl: process.env.DB_SSL === 'true' || process.env.NODE_ENV === 'production' ? {
+      rejectUnauthorized: false
+    } : false,
+  };
+}
+
+const pool = new Pool(poolConfig);
 
 async function initializeRoles() {
   try {

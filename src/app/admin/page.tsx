@@ -37,15 +37,17 @@ export default function AdminPage() {
 
   const fetchUsers = useCallback(async () => {
     try {
-      const response = await fetch('/api/admin/users');
+      const response = await fetch(`/api/admin/users?adminUserId=${user?.id}`);
       if (response.ok) {
         const data = await response.json();
         setUsers(data.users);
+      } else {
+        console.error('Failed to fetch users:', response.status);
       }
     } catch (error) {
       console.error('Failed to fetch users:', error);
     }
-  }, []);
+  }, [user?.id]);
 
   const fetchDatabaseStatus = useCallback(async () => {
     try {
@@ -67,17 +69,24 @@ export default function AdminPage() {
     }
 
     const user = JSON.parse(userStr);
+    console.log('🔍 Admin page - User data:', user);
     setUser(user);
 
     if (user.role !== 'admin') {
+      console.log('❌ User is not admin, redirecting to dashboard');
       router.push('/dashboard');
       return;
     }
 
-    fetchUsers();
     fetchDatabaseStatus();
     setLoading(false);
-  }, [router, fetchUsers, fetchDatabaseStatus]);
+  }, [router, fetchDatabaseStatus]);
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchUsers();
+    }
+  }, [user?.id, fetchUsers]);
 
   const updateUserRole = async (userId: number, newRole: string) => {
     setUpdatingRole(userId);

@@ -76,6 +76,7 @@ export default function Dashboard() {
     }
 
     const userData = JSON.parse(user);
+    console.log('🔍 User data loaded:', userData);
     setUserId(userData.id);
     setUserRole(userData.role);
     setUserName(`${userData.first_name} ${userData.last_name}`);
